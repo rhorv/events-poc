@@ -74,7 +74,7 @@ This look long and complicated, but don't worry, it is really just a few command
     
 Note:   
 You can run ``make start-services`` to start the rabbitmq server, the kafka server and the entire ELK stack at the same time.  
-In order to shut them down, run ``make stop-services``, or ``make rabbitmq-stop``, make ``kafka-stop`` and ``make elk-stop``
+In order to shut them down, run ``make stop-services``, or ``make rabbitmq-stop``, ``make kafka-stop`` and ``make elk-stop``
 
 You should be good to go at this point (The ELK stack might need restarting since it will initially try to consume messages from sources that didn't exist at that time)
 
