@@ -159,11 +159,11 @@ Currently the consumer/publisher in use is simply a value in the DI config (src/
 The correct values are:
 
 Kafka:  
-``<alias name="splitKafkaPublisher" alias="messagePublisher" />``
+``<alias name="splitKafkaPublisher" alias="messagePublisher" />``  
 ``<alias name="kafkaConsumer" alias="messageConsumer" />``
 
 RabbitMQ:  
-``<alias name="splitRabbitPublisher" alias="messagePublisher" />``
+``<alias name="splitRabbitPublisher" alias="messagePublisher" />``  
 ``<alias name="rabbitConsumer" alias="messageConsumer" />``
 
 Change one for the other if you want to switch technologies 
