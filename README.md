@@ -1,6 +1,6 @@
-#Event processing POC
+# Event processing POC
 
-##What this project is
+## What this project is
 
 This small project is meant to be an implementation of a minimalistic 
 event processing consumer and publisher to demo a few concepts, such as 
@@ -13,14 +13,14 @@ This project contains 2 main packages
 There are no cross dependencies in the project, other than the application depending on interfaces.
 There are no technological dependencies in the application either
 
-##What this project isn't
+## What this project isn't
 
 - perfect
 - fully parameterized
 - production grade
 - secure
 
-##Known issues / improvements
+## Known issues / improvements
 
 - Publishing is direct and not buffered
 - Some values are hardcoded
@@ -34,13 +34,13 @@ There are no technological dependencies in the application either
 - actual implementation for consumers and publishes are a 100% copy-paste from example code and could use massive improvements
 - docker compose files could use an overhaul
 
-###This project
+### This project
 - might not be the most optimally set up based on java project setup "best practices"
 - is using c# style interface naming and zero annotations in the main application *bite me*
 - is missing some formatting
 - might not be implemented *the java way*
 
-##Pre-requisites
+## Pre-requisites
 
 First and foremost you will need GNU make
 If you have that you can run ``make check-deps`` for a rudementary dependency check 
@@ -52,7 +52,7 @@ You will definitely need the following things:
 - docker-compose (tested with 1.25.0)
 - maven (tested with 3.6.3)
 
-##How to set the project up
+## How to set the project up
 
 This look long and complicated, but don't worry, it is really just a few commands to run and a few values to change (if you want to), the rest is just explanation.
 
@@ -74,7 +74,7 @@ This look long and complicated, but don't worry, it is really just a few command
     
 You should be good to go at this point (The ELK stack might need restarting since it will initially try to consume messages from sources that didn't exist at that time)
 
-##Setting up kibana
+## Setting up kibana
 
 There is a bonus step for setting up the index for kibana, this can only be done after at least 1 message got published
 Once that's done (you can verify the message in KafDrop or rabbitMQ management), you should:
@@ -88,35 +88,35 @@ Once that's done (you can verify the message in KafDrop or rabbitMQ management),
 
 You should be able to see messages coming through now if you select "Discover" from the hamburger menu on the top left side (Under Analytics) 
 
-##How to build the project
+## How to build the project
 
 This one is easy, just run ``make`` (or ``make build``)
 
-##How to run the tests
+## How to run the tests
 
 Also easy, just run ``make test``
 
-##Hot to run the project
+## Hot to run the project
 
 There are 2 ways of running the code, by hand/from your IDE, or as a docker container
 
-###Running the code by hand
+### Running the code by hand
 
 After building the project, you should be able to run the main application by running ``java -jar target/gs-maven-0.1.0.jar``
 This will start the currently configured consumer
 
-###Running the code from your IDE
+### Running the code from your IDE
 
 Set the project up in your favorite IDE, and click run(?)
 You can run 2 scripts this way, "MyApplication" will run the consumer (whichever one is configured in the container), or run "QuickPublish" which will just simply publish a ``transaction_cleared`` event. 
 
-###Running the code as a docker container
+### Running the code as a docker container
 
 In order to run the project in a docker container:
 1. Build the container by running ``make container``
 2. Run ``docker run --network=poc-events events-poc`` (or simply run ``docker-compose up`` from the project root directory)
 
-##How does the processing work / what should I see?
+## How does the processing work / what should I see?
 
 The application has 2 messages ``transaction_cleared`` and ``calculate_charges``
 In the current setup, there is a single handler listening to ``transaction_cleared`` and publishing ``calculate_charges`` as a consequence, therefore in order for you to see anything happening you should kick the process off by publishing a ``transaction_cleared`` event.
