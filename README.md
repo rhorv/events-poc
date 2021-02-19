@@ -42,8 +42,8 @@ There are no technological dependencies in the application either
 
 ## Pre-requisites
 
-First and foremost you will need GNU make
-If you have that you can run ``make check-deps`` for a rudementary dependency check 
+First and foremost you will need GNU make.  
+If you have that you can run ``make check-deps`` for a rudementary dependency check.   
 This will check for things you need (not for specific versions though just yet)
 
 You will definitely need the following things:
@@ -96,7 +96,7 @@ This one is easy, just run ``make`` (or ``make build``)
 
 Also easy, just run ``make test``
 
-## Hot to run the project
+## How to run the project
 
 There are 2 ways of running the code, by hand/from your IDE, or as a docker container
 
@@ -152,3 +152,18 @@ __RabbitMQ__:
 (Q): Queue
 
 the "logging" queue is consumed by elk
+
+## How to change consumers
+
+Currently the consumer/publisher in use is simply a value in the DI config (src/main/resources/applicationContext.xml).  
+The correct values are:
+
+Kafka:  
+``<alias name="splitKafkaPublisher" alias="messagePublisher" />``
+``<alias name="kafkaConsumer" alias="messageConsumer" />``
+
+RabbitMQ:  
+``<alias name="splitRabbitPublisher" alias="messagePublisher" />``
+``<alias name="rabbitConsumer" alias="messageConsumer" />``
+
+Change one for the other if you want to switch technologies 
