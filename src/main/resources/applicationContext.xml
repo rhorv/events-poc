@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="schemaProvider" class="events.formatter.RJS1.HardCodedSchemaProvider" />
+    <bean id="rjs1Deserializer" class="events.formatter.RJS1.RJS1Deserializer">
+        <constructor-arg ref="schemaProvider" />
+    </bean>
+
+    <bean id="rjs1Serializer" class="events.formatter.RJS1.RJS1Serializer" />
+    <bean id="decoratedRjs1Serializer" class="events.formatter.RJS1.SerializedValidatorDecorator">
+        <constructor-arg ref="rjs1Serializer" />
+        <constructor-arg ref="schemaProvider" />
+    </bean>
+
+    <bean id="guavaDispatcher" class="events.dispatcher.guava.GuavaDispatcher">
+    </bean>
+
+    <bean id="rabbitConnectionFactory" class="com.rabbitmq.client.ConnectionFactory">
+        <property name="username" value="admin" />
+        <property name="password" value="admin123" />
+        <property name="host" value="rabbitmq" />
+        <property name="port" value="5672" />
+        <property name="virtualHost" value="/" />
+    </bean>
+
+    <bean id="kafkaConsumer" class="events.consumer.kafka.KafkaTopicConsumer">
+        <constructor-arg ref="deserializer" />
+        <constructor-arg ref="dispatcher" />
+        <constructor-arg>
+            <props>
+                <prop key="server">kafka:9092</prop>
+                <prop key="topicName">testtopic</prop>
+            </props>
+        </constructor-arg>
+    </bean>
+    <bean id="rabbitConsumer" class="events.consumer.rabbitmq.RabbitMQConsumer">
+        <constructor-arg ref="deserializer" />
+        <constructor-arg ref="dispatcher" />
+        <constructor-arg ref="rabbitConnectionFactory" />
+        <constructor-arg value="testqueue" />
+    </bean>
+
+    <bean id="kafkaEventPublisher" class="events.publisher.kafka.KafkaTopicPublisher">
+        <constructor-arg ref="serializer" />
+        <constructor-arg>
+            <props>
+                <prop key="server">kafka:9092</prop>
+                <prop key="topicName">testtopic</prop>
+            </props>
+        </constructor-arg>
+    </bean>
+    <bean id="kafkaCommandPublisher" class="events.publisher.kafka.KafkaTopicPublisher">
+        <constructor-arg ref="serializer" />
+        <constructor-arg>
+            <props>
+                <prop key="server">kafka:9092</prop>
+                <prop key="topicName">othertopic</prop>
+            </props>
+        </constructor-arg>
+    </bean>
+    <bean id="rabbitEventPublisher" class="events.publisher.rabbitmq.RabbitMQPublisher">
+        <constructor-arg ref="serializer" />
+        <constructor-arg ref="rabbitConnectionFactory" />
+        <constructor-arg value="events" />
+    </bean>
+    <bean id="rabbitCommandPublisher" class="events.publisher.rabbitmq.RabbitMQPublisher">
+        <constructor-arg ref="serializer" />
+        <constructor-arg ref="rabbitConnectionFactory" />
+        <constructor-arg value="commands" />
+    </bean>
+    <bean id="splitRabbitPublisher" class="events.publisher.SplitPublisher">
+        <constructor-arg>
+            <map>
+                <entry key="event" value-ref="rabbitEventPublisher" />
+                <entry key="command" value-ref="rabbitCommandPublisher" />
+            </map>
+        </constructor-arg>
+    </bean>
+    <bean id="splitKafkaPublisher" class="events.publisher.SplitPublisher">
+        <constructor-arg>
+            <map>
+                <entry key="event" value-ref="kafkaEventPublisher" />
+                <entry key="command" value-ref="kafkaCommandPublisher" />
+            </map>
+        </constructor-arg>
+    </bean>
+
+
+    <alias name="splitRabbitPublisher" alias="messagePublisher" />
+    <alias name="rabbitConsumer" alias="messageConsumer" />
+    <alias name="guavaDispatcher" alias="dispatcher" />
+    <alias name="decoratedRjs1Serializer" alias="serializer" />
+    <alias name="rjs1Deserializer" alias="deserializer" />
+
+    <bean id="doSomething" class="application.handler.DoSomething">
+        <constructor-arg ref="messagePublisher" />
+    </bean>
+</beans>

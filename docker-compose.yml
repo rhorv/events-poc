@@ -1,0 +1,9 @@
+version: '2'
+services:
+  events-poc:
+    image: events-poc:latest
+
+networks:
+  default:
+    external:
+      name: poc-events
