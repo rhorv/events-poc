@@ -1,50 +1,52 @@
 package events;
 
-import org.apache.kafka.common.protocol.types.Field;
-import org.joda.time.DateTime;
-
-import java.time.LocalTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.joda.time.DateTime;
 
 public class Message implements IMessage {
 
-    private static enum Category {
-        event,
-        command
-    }
-    private String name;
-    private Map<String, String> payload = new HashMap<String, String>();
-    private Integer version;
-    private DateTime occurredAt;
-    private Category category;
+  private static enum Category {
+    event,
+    command
+  }
 
-    public Message(String name, Map<String, String> payload, Integer version, DateTime occurredAt, String category) {
-        this.name = name;
-        this.payload = payload;
-        this.version = version;
-        this.occurredAt = occurredAt;
-        this.category = Category.valueOf(category);
-    }
+  private String name;
+  private Map<String, String> payload = new HashMap<String, String>();
+  private Integer version;
+  private DateTime occurredAt;
+  private Category category;
 
-    public String getName() {
-        return name;
-    }
+  public Message(
+      String name,
+      Map<String, String> payload,
+      Integer version,
+      DateTime occurredAt,
+      String category) {
+    this.name = name;
+    this.payload = payload;
+    this.version = version;
+    this.occurredAt = occurredAt;
+    this.category = Category.valueOf(category);
+  }
 
-    public Map<String, String> getPayload() {
-        return payload;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Integer getVersion() {
-        return version;
-    }
+  public Map<String, String> getPayload() {
+    return payload;
+  }
 
-    public DateTime getOccurredAt() {
-        return occurredAt;
-    }
+  public Integer getVersion() {
+    return version;
+  }
 
-    public String getCategory() {
-        return category.toString();
-    }
+  public DateTime getOccurredAt() {
+    return occurredAt;
+  }
+
+  public String getCategory() {
+    return category.toString();
+  }
 }

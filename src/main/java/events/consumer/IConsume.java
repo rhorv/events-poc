@@ -1,5 +1,6 @@
 package events.consumer;
 
 public interface IConsume {
-    public void consume() throws Exception;
+
+  public void consume() throws Exception;
 }

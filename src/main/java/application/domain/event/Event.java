@@ -1,7 +1,8 @@
 package application.domain.event;
 
 public abstract class Event {
-    public String getCategory() {
-        return "event";
-    }
+
+  public String getCategory() {
+    return "event";
+  }
 }

@@ -1,53 +1,51 @@
 package application.domain.event;
 
-import application.domain.Currency;
-import application.domain.Money;
 import events.IMessage;
-import org.joda.time.DateTime;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import org.joda.time.DateTime;
 
 public class CalculateChargesCommand extends Command implements IMessage {
-    public static final String NAME = "calculate_charges";
-    private UUID transactionId;
-    private DateTime occurredAt;
 
-    public CalculateChargesCommand(UUID transactionId) {
-        this.transactionId = transactionId;
-        this.occurredAt = new DateTime();
-    }
+  public static final String NAME = "calculate_charges";
+  private UUID transactionId;
+  private DateTime occurredAt;
 
-    public UUID getTransactionId() {
-        return transactionId;
-    }
+  public CalculateChargesCommand(UUID transactionId) {
+    this.transactionId = transactionId;
+    this.occurredAt = new DateTime();
+  }
 
-    public Map<String, String> getPayload() {
-        Map<String, String> payload = new HashMap<String , String >();
-        payload.put("transactionId", this.transactionId.toString());
-        return payload;
-    }
+  public UUID getTransactionId() {
+    return transactionId;
+  }
 
-    public static CalculateChargesCommand fromMessage(IMessage message) {
-        if (!message.getName().matches(CalculateChargesCommand.NAME)) {
-            throw new RuntimeException();
-        }
-        Map<String, String> payload = message.getPayload();
-        return new CalculateChargesCommand(
-                UUID.fromString(payload.get("transactionId"))
-        );
-    }
+  public Map<String, String> getPayload() {
+    Map<String, String> payload = new HashMap<String, String>();
+    payload.put("transactionId", this.transactionId.toString());
+    return payload;
+  }
 
-    public String getName() {
-        return NAME;
+  public static CalculateChargesCommand fromMessage(IMessage message) {
+    if (!message.getName().matches(CalculateChargesCommand.NAME)) {
+      throw new RuntimeException();
     }
+    Map<String, String> payload = message.getPayload();
+    return new CalculateChargesCommand(
+        UUID.fromString(payload.get("transactionId"))
+    );
+  }
 
-    public DateTime getOccurredAt() {
-        return this.occurredAt;
-    }
+  public String getName() {
+    return NAME;
+  }
 
-    public Integer getVersion() {
-        return 1;
-    }
+  public DateTime getOccurredAt() {
+    return this.occurredAt;
+  }
+
+  public Integer getVersion() {
+    return 1;
+  }
 }
