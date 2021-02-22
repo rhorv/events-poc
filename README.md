@@ -16,6 +16,7 @@ There are no technological dependencies in the application either
 ## What this project isn't
 
 - perfect
+- finished
 - fully parameterized
 - production grade
 - secure
@@ -30,6 +31,7 @@ There are no technological dependencies in the application either
 - service docker containers should be using docker volumes instead of mounted directories 
 - kafka topic initialization should be based on configuration and not be hardcoded
 - rabbitmq queue/exchange/binding initialization should be based on configuration and not be hardcoded
+- should remove the unneccesary gson class for serialization/deserialization
 - tests should be better structured into directories and not just all in one directory
 - actual implementation for consumers and publishes are a 100% copy-paste from example code and could use massive improvements
 - docker compose files could use an overhaul
@@ -54,7 +56,7 @@ You will definitely need the following things:
 
 ## How to set the project up
 
-This look long and complicated, but don't worry, it is really just a few commands to run and a few values to change (if you want to), the rest is just explanation.
+This looks long and complicated, but don't worry, it is really just a few commands to run and a few values to change (if you want to), the rest is just explanation.
 
 1. Check that you have everything with ``make check-deps``
 2. Go into the ``docker`` directory inside the project, you will find 3 other directories (kafka, rabbitmq and elk) with ``.env.example`` files in them.  
