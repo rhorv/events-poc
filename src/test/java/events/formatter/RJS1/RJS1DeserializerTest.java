@@ -1,7 +1,7 @@
+package events.formatter.RJS1;
+
 import events.IMessage;
 import events.formatter.IProvideSchema;
-import events.formatter.RJS1.HardCodedSchemaProvider;
-import events.formatter.RJS1.RJS1Deserializer;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

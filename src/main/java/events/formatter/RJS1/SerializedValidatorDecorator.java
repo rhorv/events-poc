@@ -1,7 +1,7 @@
 package events.formatter.RJS1;
 
 import events.IMessage;
-import events.ISerializeMessage;
+import events.formatter.ISerializeMessage;
 import events.formatter.IProvideSchema;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;

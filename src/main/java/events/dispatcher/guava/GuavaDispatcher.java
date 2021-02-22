@@ -1,8 +1,8 @@
 package events.dispatcher.guava;
 
 import com.google.common.eventbus.EventBus;
-import events.IDispatch;
-import events.IHandle;
+import events.dispatcher.IDispatch;
+import events.dispatcher.IHandle;
 import events.IMessage;
 
 import java.util.HashMap;

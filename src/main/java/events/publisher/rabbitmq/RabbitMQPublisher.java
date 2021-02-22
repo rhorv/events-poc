@@ -4,10 +4,8 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import events.IMessage;
-import events.IPublish;
-import events.ISerializeMessage;
-
-import java.util.Map;
+import events.publisher.IPublish;
+import events.formatter.ISerializeMessage;
 
 public class RabbitMQPublisher implements IPublish {
 

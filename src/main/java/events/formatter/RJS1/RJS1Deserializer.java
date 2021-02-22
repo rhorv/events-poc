@@ -3,7 +3,7 @@ package events.formatter.RJS1;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import events.IDeserializeMessage;
+import events.formatter.IDeserializeMessage;
 import events.IMessage;
 import events.Message;
 import events.formatter.IProvideSchema;

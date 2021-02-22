@@ -1,4 +1,6 @@
-package events;
+package events.dispatcher;
+
+import events.IMessage;
 
 public interface IDispatch {
     public void dispatch(IMessage message);

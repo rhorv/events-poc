@@ -30,12 +30,8 @@
     <bean id="kafkaConsumer" class="events.consumer.kafka.KafkaTopicConsumer">
         <constructor-arg ref="deserializer" />
         <constructor-arg ref="dispatcher" />
-        <constructor-arg>
-            <props>
-                <prop key="server">kafka:9092</prop>
-                <prop key="topicName">testtopic</prop>
-            </props>
-        </constructor-arg>
+        <constructor-arg value="kafka:9092" />
+        <constructor-arg value="testtopic" />
     </bean>
     <bean id="rabbitConsumer" class="events.consumer.rabbitmq.RabbitMQConsumer">
         <constructor-arg ref="deserializer" />
@@ -46,21 +42,13 @@
 
     <bean id="kafkaEventPublisher" class="events.publisher.kafka.KafkaTopicPublisher">
         <constructor-arg ref="serializer" />
-        <constructor-arg>
-            <props>
-                <prop key="server">kafka:9092</prop>
-                <prop key="topicName">testtopic</prop>
-            </props>
-        </constructor-arg>
+        <constructor-arg value="kafka:9092" />
+        <constructor-arg value="testtopic" />
     </bean>
     <bean id="kafkaCommandPublisher" class="events.publisher.kafka.KafkaTopicPublisher">
         <constructor-arg ref="serializer" />
-        <constructor-arg>
-            <props>
-                <prop key="server">kafka:9092</prop>
-                <prop key="topicName">othertopic</prop>
-            </props>
-        </constructor-arg>
+        <constructor-arg value="kafka:9092" />
+        <constructor-arg value="othertopic" />
     </bean>
     <bean id="rabbitEventPublisher" class="events.publisher.rabbitmq.RabbitMQPublisher">
         <constructor-arg ref="serializer" />
@@ -90,8 +78,8 @@
     </bean>
 
 
-    <alias name="splitRabbitPublisher" alias="messagePublisher" />
-    <alias name="rabbitConsumer" alias="messageConsumer" />
+    <alias name="splitKafkaPublisher" alias="messagePublisher" />
+    <alias name="kafkaConsumer" alias="messageConsumer" />
     <alias name="guavaDispatcher" alias="dispatcher" />
     <alias name="decoratedRjs1Serializer" alias="serializer" />
     <alias name="rjs1Deserializer" alias="deserializer" />

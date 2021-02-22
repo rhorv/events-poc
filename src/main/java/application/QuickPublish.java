@@ -3,7 +3,7 @@ package application;
 import application.domain.Currency;
 import application.domain.Money;
 import application.domain.event.TransactionClearedEvent;
-import events.*;
+import events.publisher.IPublish;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

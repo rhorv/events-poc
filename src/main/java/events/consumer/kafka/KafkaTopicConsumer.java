@@ -1,27 +1,28 @@
 package events.consumer.kafka;
 
-import events.IConsume;
-import events.IDeserializeMessage;
-import events.IDispatch;
+import events.consumer.IConsume;
+import events.formatter.IDeserializeMessage;
+import events.dispatcher.IDispatch;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Properties;
 
 public class KafkaTopicConsumer implements IConsume {
 
     private IDeserializeMessage formatter;
     private IDispatch dispatcher;
-    private Consumer<Long, String> consumer;
+    private String server;
+    private String topicName;
 
-    public KafkaTopicConsumer(IDeserializeMessage formatter, IDispatch dispatcher, Map<String, String> properties) {
+    public KafkaTopicConsumer(IDeserializeMessage formatter, IDispatch dispatcher, String server, String topicName) {
         this.formatter = formatter;
         this.dispatcher = dispatcher;
-        this.consumer = createConsumer(properties.get("server"), properties.get("topicName"));
+        this.server = server;
+        this.topicName = topicName;
     }
 
     private Consumer<Long, String> createConsumer(String server, String topicName) {
@@ -47,11 +48,12 @@ public class KafkaTopicConsumer implements IConsume {
     }
 
     private void runConsumer(Integer giveUp) throws InterruptedException {
+        Consumer<Long, String> consumer = createConsumer(this.server, this.topicName);
         int noRecordsCount = 0;
 
         while (true) {
             final ConsumerRecords<Long, String> consumerRecords =
-                    this.consumer.poll(1000);
+                    consumer.poll(1000);
 
             if (consumerRecords.count()==0) {
                 noRecordsCount++;

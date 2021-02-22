@@ -1,15 +1,12 @@
+package events.formatter.RJS1;
+
 import events.IMessage;
-import events.ISerializeMessage;
+import events.formatter.ISerializeMessage;
 import events.Message;
 import events.formatter.IProvideSchema;
-import events.formatter.RJS1.HardCodedSchemaProvider;
-import events.formatter.RJS1.RJS1Deserializer;
-import events.formatter.RJS1.SerializedValidatorDecorator;
-import org.apache.kafka.common.protocol.types.Field;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.util.HashMap;
 

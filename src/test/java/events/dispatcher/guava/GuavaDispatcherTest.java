@@ -1,7 +1,8 @@
-import events.IHandle;
+package events.dispatcher.guava;
+
+import events.dispatcher.IHandle;
 import events.IMessage;
 import events.Message;
-import events.dispatcher.guava.GuavaDispatcher;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +11,6 @@ import org.mockito.Mockito;
 import java.util.HashMap;
 
 import static org.mockito.Mockito.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class GuavaDispatcherTest {
 

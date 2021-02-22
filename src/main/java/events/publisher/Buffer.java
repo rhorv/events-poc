@@ -1,7 +1,6 @@
 package events.publisher;
 
 import events.IMessage;
-import events.IPublish;
 
 import java.util.*;
 

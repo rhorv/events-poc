@@ -1,19 +1,14 @@
-import application.domain.event.TransactionClearedEvent;
-import events.IHandle;
+package application.domain.event;
+
 import events.IMessage;
 import events.Message;
-import events.dispatcher.guava.GuavaDispatcher;
-import events.formatter.RJS1.RJS1Serializer;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

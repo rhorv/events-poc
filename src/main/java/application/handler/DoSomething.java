@@ -2,9 +2,9 @@ package application.handler;
 
 import application.domain.event.CalculateChargesCommand;
 import application.domain.event.TransactionClearedEvent;
-import events.IHandle;
+import events.dispatcher.IHandle;
 import events.IMessage;
-import events.IPublish;
+import events.publisher.IPublish;
 
 public class DoSomething implements IHandle {
 

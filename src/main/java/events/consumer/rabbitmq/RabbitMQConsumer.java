@@ -1,14 +1,12 @@
 package events.consumer.rabbitmq;
 
 import com.rabbitmq.client.*;
-import events.IConsume;
-import events.IDeserializeMessage;
-import events.IDispatch;
+import events.consumer.IConsume;
+import events.formatter.IDeserializeMessage;
+import events.dispatcher.IDispatch;
 
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 public class RabbitMQConsumer implements IConsume {
 

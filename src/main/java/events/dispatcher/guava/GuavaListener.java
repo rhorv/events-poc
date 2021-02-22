@@ -1,7 +1,7 @@
 package events.dispatcher.guava;
 
 import com.google.common.eventbus.Subscribe;
-import events.IHandle;
+import events.dispatcher.IHandle;
 import events.IMessage;
 
 public class GuavaListener {

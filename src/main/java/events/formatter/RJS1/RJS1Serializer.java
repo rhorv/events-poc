@@ -4,8 +4,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import events.IMessage;
-import events.ISerializeMessage;
-import events.formatter.IProvideSchema;
+import events.formatter.ISerializeMessage;
 
 import java.util.UUID;
 

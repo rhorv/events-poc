@@ -1,25 +1,23 @@
 package events.publisher.kafka;
 
 import events.IMessage;
-import events.IPublish;
-import events.ISerializeMessage;
+import events.publisher.IPublish;
+import events.formatter.ISerializeMessage;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-
-import java.util.Map;
 import java.util.Properties;
 
 public class KafkaTopicPublisher implements IPublish {
 
     private ISerializeMessage formatter;
-    private Producer<Long, String> producer;
     private String topicName;
+    private String server;
 
-    public KafkaTopicPublisher(ISerializeMessage formatter, Map<String, String> properties)  {
+    public KafkaTopicPublisher(ISerializeMessage formatter, String server, String topicName)  {
         this.formatter = formatter;
-        this.producer = createProducer(properties.get("server"));
-        this.topicName = properties.get("topicName");
+        this.topicName = topicName;
+        this.server = server;
     }
 
     private Producer<Long, String> createProducer(String server) {
@@ -35,6 +33,8 @@ public class KafkaTopicPublisher implements IPublish {
     }
 
     void runProducer(IMessage message) throws Exception {
+
+        Producer<Long, String> producer = createProducer(this.server);
         long time = System.currentTimeMillis();
 
         try {
@@ -43,7 +43,7 @@ public class KafkaTopicPublisher implements IPublish {
                         new ProducerRecord<>(this.topicName, index,
                                 this.formatter.serialize(message));
 
-                RecordMetadata metadata = this.producer.send(record).get();
+                RecordMetadata metadata = producer.send(record).get();
 
                 long elapsedTime = System.currentTimeMillis() - time;
                 System.out.printf("[x] sent record(key=%s value=%s) " +
@@ -54,7 +54,6 @@ public class KafkaTopicPublisher implements IPublish {
             }
         } finally {
             producer.flush();
-//            producer.close();
         }
     }
 
