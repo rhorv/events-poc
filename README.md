@@ -115,8 +115,8 @@ This will start the currently configured consumer
 
 1. Set the project up in your favorite IDE
 2. Make sure you define these in your ``/etc/hosts``:  
-``localhost kafka``  
-``localhost rabbitmq``  
+``127.0.0.1 kafka``  
+``127.0.0.1 rabbitmq``  
 3. Click run in your IDE
 
 You can run 2 scripts this way, "MyApplication" will run the consumer (whichever one is configured in the container), or run "QuickPublish" which will just simply publish a ``transaction_cleared`` event. 
