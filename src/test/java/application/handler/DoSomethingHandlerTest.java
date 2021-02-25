@@ -29,13 +29,13 @@ class DoSomethingHandlerTest {
     }
   }
 
-  private DoSomething handler;
+  private TransactionChargeHandler handler;
   private StubPublisher publisher;
 
   @BeforeEach
   public void setUp() throws Exception {
     this.publisher = new StubPublisher();
-    this.handler = new DoSomething(this.publisher);
+    this.handler = new TransactionChargeHandler(this.publisher);
   }
 
   @Test

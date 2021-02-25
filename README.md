@@ -119,7 +119,10 @@ This will start the currently configured consumer
 ``127.0.0.1 rabbitmq``  
 3. Click run in your IDE
 
-You can run 2 scripts this way, "MyApplication" will run the consumer (whichever one is configured in the container), or run "QuickPublish" which will just simply publish a ``transaction_cleared`` event. 
+You can run 3 scripts this way, "MyApplication" will run the consumer (whichever one is configured in the container).   
+The other 2 are "Example1" and "Example2":  
+- Example1 will just simply publish a ``transaction_cleared`` event that will act as a trigger for the consumer to handle it.  
+- Example2 will publish 3 versions of an event, and let a consumer direct it to a handler that will interpret all of them as version 2
 
 ### Running the code as a docker container
 
@@ -129,9 +132,11 @@ In order to run the project in a docker container:
 
 ## How does the processing work / what should I see?
 
-The application has 2 messages ``transaction_cleared`` and ``calculate_charges``
+### Example1
+
+In the first example, the application cares about 2 messages ``transaction_cleared`` and ``calculate_charges``
 In the current setup, there is a single handler listening to ``transaction_cleared`` and publishing ``calculate_charges`` as a consequence, therefore in order for you to see anything happening you should kick the process off by publishing a ``transaction_cleared`` event.
-You can publish this message either by hand in the web UI, or use a small script was provided for your convenience called "QuickPublish" in the main application (just run QuickPublish.java from you IDE)
+You can publish this message either by hand in the web UI, or use a small script was provided for your convenience called "Example1" in the main application (just run Example1.java from you IDE)
 
 Once the ``transaction_cleared`` event is published, (and the consumer is running, or started up after) you should see it processing the event, handling it, and publishing the ``calculate_charges`` command as a response to it.
 What exactly happens depends on which consumer is configured, it's a difference of how the 2 are set up.
@@ -163,6 +168,11 @@ __RabbitMQ__:
 (Q): Queue
 
 the "logging" queue is consumed by elk
+
+### Example2
+
+Example 2 is for message versioning, you can use the "Example2" script to publish 3 different versions of the same message ``transaction_cancelled``.
+Once it did a handler will pick that up, and act like this application is interested about version 2 of this message (only), but will still consume v1 and v3 messages just fine.
 
 ## How to change consumers
 

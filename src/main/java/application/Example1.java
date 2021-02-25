@@ -8,12 +8,15 @@ import java.util.UUID;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class QuickPublish {
+/**
+ * Example1: In this example we are publishing a TransactionClearedEvent to kick the handling off.
+ */
+public class Example1 {
 
   public static void main(String[] args) {
 
-    ApplicationContext appContext
-        = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+    ApplicationContext appContext =
+        new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
 
     IPublish publisher = (IPublish) appContext.getBean("messagePublisher");
     try {
@@ -22,6 +25,5 @@ public class QuickPublish {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
 }

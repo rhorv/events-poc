@@ -19,7 +19,7 @@ public class TransactionClearedEvent extends Event implements IMessage {
   public TransactionClearedEvent(UUID transactionId, Money interchangeFee) {
     this.transactionId = transactionId;
     this.interchangeFee = interchangeFee;
-    occurredAt = new DateTime();
+    this.occurredAt = new DateTime();
   }
 
   public UUID getTransactionId() {

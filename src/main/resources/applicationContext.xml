@@ -77,6 +77,12 @@
     </constructor-arg>
   </bean>
 
+  <bean id="transactionChargeHandler" class="application.handler.TransactionChargeHandler">
+    <constructor-arg ref="messagePublisher"/>
+  </bean>
+  <bean id="refundCustomerHandler" class="application.handler.RefundCustomerHandler">
+    <constructor-arg ref="messagePublisher"/>
+  </bean>
 
   <alias name="splitKafkaPublisher" alias="messagePublisher"/>
   <alias name="kafkaConsumer" alias="messageConsumer"/>
@@ -84,7 +90,4 @@
   <alias name="decoratedRjs1Serializer" alias="serializer"/>
   <alias name="rjs1Deserializer" alias="deserializer"/>
 
-  <bean id="doSomething" class="application.handler.DoSomething">
-    <constructor-arg ref="messagePublisher"/>
-  </bean>
 </beans>

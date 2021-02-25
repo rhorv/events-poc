@@ -15,7 +15,10 @@ public class MyApplication {
 
     IConsume consumer = (IConsume) appContext.getBean("messageConsumer");
     IDispatch dispatcher = (IDispatch) appContext.getBean("dispatcher");
-    dispatcher.subscribe("transaction_cleared", (IHandle) appContext.getBean("doSomething"));
+    dispatcher.subscribe(
+        "transaction_cleared", (IHandle) appContext.getBean("transactionChargeHandler"));
+    dispatcher.subscribe(
+        "transaction_cancelled", (IHandle) appContext.getBean("refundCustomerHandler"));
 
     try {
       consumer.consume();

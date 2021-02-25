@@ -6,11 +6,11 @@ import events.IMessage;
 import events.dispatcher.IHandle;
 import events.publisher.IPublish;
 
-public class DoSomething implements IHandle {
+public class TransactionChargeHandler implements IHandle {
 
   private IPublish publisher;
 
-  public DoSomething(IPublish publisher) {
+  public TransactionChargeHandler(IPublish publisher) {
     this.publisher = publisher;
   }
 

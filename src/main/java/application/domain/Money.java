@@ -17,4 +17,11 @@ public class Money {
   public Currency getCurrency() {
     return currency;
   }
+
+  public boolean moreThan(Money other) throws Exception {
+    if (this.currency != other.getCurrency()) {
+      throw new Exception();
+    }
+    return this.amount > other.getAmount();
+  }
 }
