@@ -18,7 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-class DoSomethingHandlerTest {
+class TransactionChargesHandlerTest {
 
   private class StubPublisher implements IPublish {
 
