@@ -44,7 +44,7 @@ public class Hav1Deserializer implements IDeserializeMessage {
           + "\t\t\t\t},\n"
           + "\n"
           + "                {\"name\" : \"category\", \n"
-          + "                \"type\" : \"string\", \n"
+          + "                \"type\" : \"string\"},\n"
           + "\n"
           + "                {\"name\" : \"occurred_at\", \n"
           + "                \"type\" : \"string\"},\n"
