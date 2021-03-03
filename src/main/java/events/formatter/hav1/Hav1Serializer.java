@@ -11,13 +11,15 @@ import org.apache.avro.generic.GenericData.Record;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.io.DatumReader;
-import org.apache.avro.io.Decoder;
-import org.apache.avro.io.DecoderFactory;
-import org.apache.avro.io.Encoder;
-import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.io.*;
+import org.apache.avro.message.BinaryMessageEncoder;
+import org.apache.avro.reflect.AvroEncode;
 
 public class Hav1Serializer implements ISerializeMessage {
+  private Parser parser;
+  private Schema avroSchema;
+  private GenericDatumWriter<GenericRecord> avroWriter;
+  private EncoderFactory encoderFactory;
 
   private String schema =
       "{\n"
@@ -39,11 +41,7 @@ public class Hav1Serializer implements ISerializeMessage {
           + "\t\t\t\t},\n"
           + "\n"
           + "                {\"name\" : \"category\", \n"
-          + "                \"type\" : {\n"
-          + "\t\t\t\t\t\"type\": \"enum\", \n"
-          + "\t\t\t\t\t\"name\": \"category\",\n"
-          + "\t\t\t\t\t\"symbols\" : [\"event\", \"command\"]}\n"
-          + "\t\t\t\t},\n"
+          + "                \"type\" : \"string\", \n"
           + "\n"
           + "                {\"name\" : \"occurred_at\", \n"
           + "                \"type\" : \"string\"},\n"
@@ -52,10 +50,15 @@ public class Hav1Serializer implements ISerializeMessage {
           + "                \"type\" : \"int\"}]\n"
           + "} ";
 
+  public Hav1Serializer() {
+      this.parser = new Parser();
+      this.avroSchema = parser.parse(this.schema);
+      this.avroWriter = new GenericDatumWriter<>(avroSchema);
+      this.encoderFactory = EncoderFactory.get();
+  }
+
   public ByteArrayOutputStream serialize(IMessage message) throws Exception {
 
-    Parser parser = new Parser();
-    Schema avroSchema = parser.parse(this.schema);
     GenericRecord avroRecord = new Record(avroSchema);
     avroRecord.put("id", UUID.randomUUID().toString());
     avroRecord.put("name", message.getName());
@@ -64,9 +67,10 @@ public class Hav1Serializer implements ISerializeMessage {
     avroRecord.put("version", message.getVersion());
     avroRecord.put("payload", message.getPayload());
 
-    byte[] output = this.jsonToAvro(avroRecord.toString(), new Parser().parse(this.schema));
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    stream.write(output);
+    BinaryEncoder avroEncoder = encoderFactory.binaryEncoder(stream, null);
+    avroWriter.write(avroRecord, avroEncoder);
+    avroEncoder.flush();
     return stream;
   }
 

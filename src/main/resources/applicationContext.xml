@@ -87,11 +87,11 @@
     <constructor-arg ref="messagePublisher"/>
   </bean>
 
-  <alias name="splitRabbitPublisher" alias="messagePublisher"/>
+  <alias name="splitKafkaPublisher" alias="messagePublisher"/>
   <alias name="rabbitConsumer" alias="messageConsumer"/>
   <alias name="guavaDispatcher" alias="dispatcher"/>
-  <alias name="decoratedRjs1Serializer" alias="serializer"/>
-  <alias name="rjs1Deserializer" alias="deserializer"/>
+  <alias name="hav1Serializer" alias="serializer"/>
+  <alias name="hav1Deserializer" alias="deserializer"/>
 
 <!--  <alias name="hav1Serializer" alias="serializer"/>-->
 <!--  <alias name="hav1Deserializer" alias="deserializer"/>-->
