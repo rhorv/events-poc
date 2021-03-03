@@ -3,6 +3,8 @@ package events.publisher.kafka;
 import events.IMessage;
 import events.formatter.ISerializeMessage;
 import events.publisher.IPublish;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -40,8 +42,10 @@ public class KafkaTopicPublisher implements IPublish {
 
     try {
       for (long index = time; index < time + 1; index++) {
+        ByteArrayOutputStream body = this.formatter.serialize(message);
         final ProducerRecord<Long, String> record =
-            new ProducerRecord<>(this.topicName, index, this.formatter.serialize(message));
+            new ProducerRecord<>(
+                this.topicName, index, new String(body.toByteArray(), StandardCharsets.UTF_8));
 
         RecordMetadata metadata = producer.send(record).get();
 

@@ -6,6 +6,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import events.IMessage;
 import events.formatter.ISerializeMessage;
 import events.publisher.IPublish;
+import java.io.ByteArrayOutputStream;
 
 public class RabbitMqPublisher implements IPublish {
 
@@ -32,8 +33,8 @@ public class RabbitMqPublisher implements IPublish {
     Connection connection = connect();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(this.exchangeName, "fanout", true);
-    String body = this.formatter.serialize(message);
-    channel.basicPublish(this.exchangeName, "", null, body.getBytes());
+    ByteArrayOutputStream body = this.formatter.serialize(message);
+    channel.basicPublish(this.exchangeName, "", null, body.toByteArray());
     System.out.println("[x] Published '" + body + "'");
   }
 }

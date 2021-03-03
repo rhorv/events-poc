@@ -9,8 +9,10 @@ import com.rabbitmq.client.Envelope;
 import events.consumer.IConsume;
 import events.dispatcher.IDispatch;
 import events.formatter.IDeserializeMessage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import org.apache.commons.io.IOUtils;
 
 public class RabbitMqConsumer implements IConsume {
 
@@ -53,10 +55,9 @@ public class RabbitMqConsumer implements IConsume {
             String routingKey = envelope.getRoutingKey();
             String contentType = properties.getContentType();
             long deliveryTag = envelope.getDeliveryTag();
-            String message = new String(body, StandardCharsets.UTF_8);
-            System.out.println("[x] Received '" + message + "'");
+            System.out.println("[x] Received '" + new String(body, StandardCharsets.UTF_8) + "'");
             try {
-              dispatcher.dispatch(formatter.deserialize(message));
+              dispatcher.dispatch(formatter.deserialize(new ByteArrayInputStream(body)));
               channel.basicAck(deliveryTag, false);
             } catch (Exception e) {
               e.printStackTrace();
