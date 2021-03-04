@@ -1,0 +1,13 @@
+{
+    "type": "record",
+    "name": "hav1",
+    "namespace": "com.worldpay.poc",
+    "fields" : [
+      { "name": "id", "type": "string", "logicalType": "uuid" },
+      { "name": "name", "type": "string", "default": "NONE" },
+      { "name": "payload", "type": { "type": "map", "values": "string" } },
+      { "name": "category", "type": "string" },
+      { "name": "occurred_at", "type": "string" },
+      { "name": "version", "type": "int" }
+    ]
+}
