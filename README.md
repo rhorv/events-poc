@@ -1,5 +1,11 @@
 # Event processing POC
 
+## Disclaimer
+
+This project is meant to be used as a POC for structure and design.  
+Adapters should NOT be used as-is in any production-like environment, should NOT be copy-pasted from this codebase.  
+Interfaces on the other hand can be reused, and reasoned about in any way you feel appropriate (after slight adjustment to exception types where necessary)
+
 ## What this project is
 
 This small project is meant to be an implementation of a minimalistic 
