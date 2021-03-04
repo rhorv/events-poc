@@ -96,4 +96,23 @@
 <!--  <alias name="hav1Serializer" alias="serializer"/>-->
 <!--  <alias name="hav1Deserializer" alias="deserializer"/>-->
 
+  <bean id="binProcessTracker" class="binprocessor.service.infrastructure.binprocesstracker.InMemoryBinProcessTrackerRepository">
+  </bean>
+  <bean id="schemeClassifier" class="binprocessor.domain.service.HardCodedSchemeFilenameConfiguration">
+  </bean>
+  <bean id="cardBinDefinitionProcessManager" class="binprocessor.handler.CardBinDefinitionProcessManager">
+    <constructor-arg ref="messagePublisher"/>
+    <constructor-arg ref="binProcessTracker"/>
+    <constructor-arg ref="schemeClassifier"/>
+  </bean>
+  <bean id="cardBinDefinitionRegister" class="binprocessor.handler.CardBinDefinitionRegister">
+    <constructor-arg ref="messagePublisher"/>
+  </bean>
+  <bean id="organizeVisaSource" class="binprocessor.handler.OrganizeVisaSource">
+    <constructor-arg ref="messagePublisher"/>
+  </bean>
+  <bean id="startCardBinDefinitionProcessing" class="binprocessor.handler.StartCardBinDefinitionProcessing">
+    <constructor-arg ref="messagePublisher"/>
+  </bean>
+
 </beans>
