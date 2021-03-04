@@ -60,6 +60,7 @@ public class RabbitMqConsumer implements IConsume {
               dispatcher.dispatch(formatter.deserialize(new ByteArrayInputStream(body)));
               channel.basicAck(deliveryTag, false);
             } catch (Exception e) {
+              channel.basicNack(deliveryTag, false, true);
               e.printStackTrace();
             }
           }
