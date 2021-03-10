@@ -17,8 +17,10 @@ public class TransactionChargeHandler implements IHandle {
   public void handle(IMessage message) throws Exception {
     TransactionClearedEvent event = TransactionClearedEvent.fromMessage(message);
     System.out.println(
-        "[x] Handled: " + event.getName() + " transaction id:" + event.getTransactionId()
-            .toString());
+        "[x] Handled: "
+            + event.getName()
+            + " transaction id:"
+            + event.getTransactionId().toString());
 
     publisher.publish(new CalculateChargesCommand(event.getTransactionId()));
   }
