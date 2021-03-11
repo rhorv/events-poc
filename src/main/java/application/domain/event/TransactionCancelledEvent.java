@@ -20,10 +20,6 @@ public class TransactionCancelledEvent extends Event implements IMessage {
     this.occurredAt = new DateTime();
   }
 
-  public UUID getTransactionId() {
-    return transactionId;
-  }
-
   public String getReason() {
     return reason;
   }
@@ -52,6 +48,8 @@ public class TransactionCancelledEvent extends Event implements IMessage {
   public String getName() {
     return NAME;
   }
+
+  public String getEventId() { return transactionId.toString(); }
 
   public DateTime getOccurredAt() {
     return this.occurredAt;

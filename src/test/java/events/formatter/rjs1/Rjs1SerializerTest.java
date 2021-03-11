@@ -10,6 +10,8 @@ import events.Message;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.UUID;
+
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +30,7 @@ class Rjs1SerializerTest {
 
     HashMap<String, String> payload = new HashMap<String, String>();
     payload.put("field", "value");
-    IMessage message = new Message("event_name", payload, 1,
+    IMessage message = new Message("event_name", UUID.randomUUID().toString(), payload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
 
     ByteArrayOutputStream jsonMessage = this.serializer.serialize(message);

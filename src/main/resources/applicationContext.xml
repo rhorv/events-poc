@@ -16,8 +16,8 @@
     <constructor-arg ref="schemaProvider"/>
   </bean>
 
-  <bean id="hav1Serializer" class="events.formatter.hav1.Hav1Serializer"/>
-  <bean id="hav1Deserializer" class="events.formatter.hav1.Hav1Deserializer"/>
+  <bean id="edaAvroGenericSerialiser" class="events.formatter.edaAvroSerDes.edaAvroGenericSerialiser"/>
+  <bean id="edaAvroGenericDeserialiser" class="events.formatter.edaAvroSerDes.edaAvroGenericDeserialiser"/>
 
   <bean id="guavaDispatcher" class="events.dispatcher.guava.GuavaDispatcher">
   </bean>
@@ -88,12 +88,12 @@
   </bean>
 
   <alias name="splitKafkaPublisher" alias="messagePublisher"/>
-  <alias name="rabbitConsumer" alias="messageConsumer"/>
+  <alias name="kafkaConsumer" alias="messageConsumer"/>
   <alias name="guavaDispatcher" alias="dispatcher"/>
-  <alias name="hav1Serializer" alias="serializer"/>
-  <alias name="hav1Deserializer" alias="deserializer"/>
+  <alias name="edaAvroGenericSerialiser" alias="serializer"/>
+  <alias name="edaAvroGenericDeserialiser" alias="deserializer"/>
 
-<!--  <alias name="hav1Serializer" alias="serializer"/>-->
-<!--  <alias name="hav1Deserializer" alias="deserializer"/>-->
+<!--  <alias name="rjs1Serializer" alias="serializer"/>-->
+<!--  <alias name="decoratedRjs1Serializer" alias="deserializer"/>-->
 
 </beans>

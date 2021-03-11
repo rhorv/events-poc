@@ -5,6 +5,11 @@
   "https://checkstyle.org/dtds/suppressions_1_0.dtd">
 
 <suppressions>
+
+  <!--module name="BeforeExecutionExclusionFileFilter">
+    <property name="fileNamePattern" value="hav1.java"/>
+  </module-->
+
   <suppress checks="MissingJavadocMethodCheck"
     files=".java"
     lines="1-9999"/>

@@ -38,7 +38,7 @@ public class Rjs1Deserializer implements IDeserializeMessage {
     GsonClassDto dto = gson.fromJson(messageBody, GsonClassDto.class);
 
     return new Message(
-        dto.name, dto.payload, dto.version, new DateTime(dto.occurredAt), dto.category);
+        dto.name, dto.payload.get("transactionId"), dto.payload, dto.version, new DateTime(dto.occurredAt), dto.category);
   }
 
   private String byteArrayToString(ByteArrayInputStream in) {

@@ -28,6 +28,7 @@ public class GuavaDispatcher implements IDispatch {
     GuavaMessage guavaMessage =
         new GuavaMessage(
             message.getName(),
+            message.getEventId(),
             message.getPayload(),
             message.getVersion(),
             message.getOccurredAt(),

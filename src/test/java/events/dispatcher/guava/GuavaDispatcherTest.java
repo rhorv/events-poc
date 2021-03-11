@@ -8,6 +8,8 @@ import events.IMessage;
 import events.Message;
 import events.dispatcher.IHandle;
 import java.util.HashMap;
+import java.util.UUID;
+
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,9 +32,10 @@ class GuavaDispatcherTest {
     IMessage message =
         new Message(
             "event_name",
-            new HashMap<String, String>(),
+             UUID.randomUUID().toString(),
+             new HashMap<String, String>(),
             1,
-            new DateTime("2020-09-15T15:53:00+01:00"),
+             new DateTime("2020-09-15T15:53:00+01:00"),
             "event");
     this.dispatcher.subscribe("event_name", this.handler);
     this.dispatcher.dispatch(message);
@@ -50,6 +53,7 @@ class GuavaDispatcherTest {
     IMessage message =
         new Message(
             "event_name",
+                UUID.randomUUID().toString(),
             new HashMap<String, String>(),
             1,
             new DateTime("2020-09-15T15:53:00+01:00"),

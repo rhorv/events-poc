@@ -34,7 +34,7 @@ class TransactionCancelledEventTest {
 
   @Test
   void testItFailsToCreateOnInCompatibleMessageName() {
-    IMessage message = new Message("event_name", this.validPayload, 1,
+    IMessage message = new Message("event_name", UUID.randomUUID().toString(), this.validPayload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     assertThrows(Exception.class, () -> {
       TransactionCancelledEvent.fromMessage(message);
@@ -43,7 +43,7 @@ class TransactionCancelledEventTest {
 
   @Test
   void testItFailsToCreateOnInCompatiblePayload() {
-    IMessage message = new Message(TransactionCancelledEvent.NAME, this.invalidPayload, 1,
+    IMessage message = new Message(TransactionCancelledEvent.NAME, UUID.randomUUID().toString(), this.invalidPayload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     assertThrows(Exception.class, () -> {
       TransactionCancelledEvent.fromMessage(message);
@@ -52,21 +52,21 @@ class TransactionCancelledEventTest {
 
   @Test
   void testItSucceedsInCreatingAVersion2EventOnCompatibleV1Message() throws Exception {
-    IMessage message = new Message(TransactionCancelledEvent.NAME, this.validPayload, 1,
+    IMessage message = new Message(TransactionCancelledEvent.NAME, this.validPayload.get("transactionId"), this.validPayload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     TransactionCancelledEvent event = TransactionCancelledEvent.fromMessage(message);
     assertEquals(event.getName(), TransactionCancelledEvent.NAME);
-    assertEquals(event.getTransactionId().toString(), this.validPayload.get("transactionId"));
+    assertEquals(event.getEventId(), this.validPayload.get("transactionId"));
     assertEquals(event.getReason(), "unspecified");
   }
 
   @Test
   void testItSucceedsInCreatingAVersion2EventOnCompatibleV2OrHigherMessage() throws Exception {
-    IMessage message = new Message(TransactionCancelledEvent.NAME, this.validv3Payload, 3,
+    IMessage message = new Message(TransactionCancelledEvent.NAME, this.validv3Payload.get("transactionId"), this.validv3Payload, 3,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     TransactionCancelledEvent event = TransactionCancelledEvent.fromMessage(message);
     assertEquals(event.getName(), TransactionCancelledEvent.NAME);
-    assertEquals(event.getTransactionId().toString(), this.validv3Payload.get("transactionId"));
+    assertEquals(event.getEventId().toString(), this.validv3Payload.get("transactionId"));
     assertEquals(event.getReason(), this.validv3Payload.get("reason"));
   }
 

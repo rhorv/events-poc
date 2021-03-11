@@ -22,11 +22,7 @@ public class TransactionClearedEvent extends Event implements IMessage {
     this.occurredAt = new DateTime();
   }
 
-  public UUID getTransactionId() {
-    return transactionId;
-  }
-
-  public Money getInterchangeFee() {
+    public Money getInterchangeFee() {
     return interchangeFee;
   }
 
@@ -35,6 +31,7 @@ public class TransactionClearedEvent extends Event implements IMessage {
       throw new RuntimeException();
     }
     Map<String, String> payload = message.getPayload();
+
     return new TransactionClearedEvent(
         UUID.fromString(payload.get("transactionId")),
         new Money(
@@ -54,6 +51,10 @@ public class TransactionClearedEvent extends Event implements IMessage {
 
   public String getName() {
     return NAME;
+  }
+
+  public String getEventId() {
+    return transactionId.toString();
   }
 
   public DateTime getOccurredAt() {

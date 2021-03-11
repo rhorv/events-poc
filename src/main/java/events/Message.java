@@ -12,6 +12,7 @@ public class Message implements IMessage {
   }
 
   private String name;
+  private String eventId;
   private Map<String, String> payload = new HashMap<String, String>();
   private Integer version;
   private DateTime occurredAt;
@@ -19,11 +20,13 @@ public class Message implements IMessage {
 
   public Message(
       String name,
+      String eventId,
       Map<String, String> payload,
       Integer version,
       DateTime occurredAt,
       String category) {
     this.name = name;
+    this.eventId = eventId;
     this.payload = payload;
     this.version = version;
     this.occurredAt = occurredAt;
@@ -32,6 +35,10 @@ public class Message implements IMessage {
 
   public String getName() {
     return name;
+  }
+
+  public String getEventId() {
+    return eventId;
   }
 
   public Map<String, String> getPayload() {
