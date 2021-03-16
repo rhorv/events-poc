@@ -122,7 +122,9 @@ This will start the currently configured consumer
 1. Set the project up in your favorite IDE
 2. Make sure you define these in your ``/etc/hosts``:  
 ``127.0.0.1 kafka``  
-``127.0.0.1 rabbitmq``  
+``127.0.0.1 rabbitmq``</br>
+``127.0.0.1 schema-registry``
+   
 3. Click run in your IDE
 
 You can run 3 scripts this way, "MyApplication" will run the consumer (whichever one is configured in the container).   
