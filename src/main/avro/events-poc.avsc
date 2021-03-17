@@ -1,7 +1,7 @@
 {
     "type": "record",
     "name": "edaAvroGenericSchema",
-    "namespace": "com.worldpay.poc",
+    "namespace": "application.avro",
     "fields" : [
       { "name": "name", "type": "string", "default": "NONE" },
       { "name": "eventId", "type": "string", "logicalType": "uuid" },
