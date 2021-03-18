@@ -39,7 +39,7 @@ public class KafkaTopicConsumer implements IConsume {
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaExampleConsumer");
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.LongDeserializer");
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.ByteArrayDeserializer");
-    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
 
     // Create the consumer using props.
     final Consumer<Long, byte[]> consumer = new KafkaConsumer<>(props);
@@ -73,8 +73,8 @@ public class KafkaTopicConsumer implements IConsume {
                       record.partition(), record.offset(), record.key(), new String(record.value(), StandardCharsets.UTF_8));
 
               ByteArrayInputStream payLoad = new ByteArrayInputStream(record.value());
-              String s1 = new String( record.headers().lastHeader("nameSerde").value(), StandardCharsets.UTF_8 );
-              dispatcher.dispatch(deserialiser.deserialize("edaAvroGeneric", payLoad));
+              String serde = new String( record.headers().lastHeader("nameSerde").value(), StandardCharsets.UTF_8 );
+              dispatcher.dispatch(deserialiser.deserialize(serde, payLoad));
               consumer.commitAsync();
             } catch (Exception e) {
               e.printStackTrace();

@@ -2,6 +2,7 @@ package events.formatter.edaAvroSerDes;
 
 import events.IMessage;
 import events.formatter.ISerializeMessage;
+import events.formatter.formatterConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
@@ -42,6 +43,11 @@ public class edaAvroGenericSerialiser implements ISerializeMessage {
         avroWriter.write(avroRecord, avroEncoder);
         avroEncoder.flush();
         return stream;
+    }
+
+    @Override
+    public String nameSerde() {
+        return formatterConstants.EDA_AVRO_GENERIC;
     }
 
     public byte[] jsonToAvro(String json, Schema schema) throws IOException {

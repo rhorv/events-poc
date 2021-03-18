@@ -47,7 +47,7 @@ public class KafkaTopicPublisher implements IPublish {
         record.headers().add("headerVersion", "1".getBytes() );
         record.headers().add("eventId", message.getEventId().getBytes() );
         record.headers().add("name", message.getName().getBytes() );
-        record.headers().add("nameSerde", "edaAvroGeneric".getBytes() );
+        record.headers().add("nameSerde", formatter.nameSerde().getBytes() );
 
         RecordMetadata metadata = producer.send(record).get();
 

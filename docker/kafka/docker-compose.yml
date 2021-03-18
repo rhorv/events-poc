@@ -19,9 +19,9 @@ services:
     ports:
       - "9092:9092"
       - "9101:9101"
-    volumes:
-      - /tmp/docker/kafka/data:/data
-      - /tmp/docker/kafka/data:/logs
+    #volumes:
+    #  - /tmp/docker/kafka/data:/data
+    #  - /tmp/docker/kafka/logs:/logs
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'

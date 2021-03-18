@@ -83,7 +83,7 @@
     <constructor-arg>
       <map>
         <entry key="edaAvroGeneric" value-ref="edaAvroGenericDeserialiser"/>
-        <entry key="rjs1" value-ref="rjs1Deserializer"/>
+        <entry key="rjs1Generic" value-ref="rjs1Deserializer"/>
       </map>
     </constructor-arg>
   </bean>
@@ -98,10 +98,11 @@
   <alias name="splitKafkaPublisher" alias="messagePublisher"/>
   <alias name="kafkaConsumer" alias="messageConsumer"/>
   <alias name="guavaDispatcher" alias="dispatcher"/>
-  <alias name="edaAvroGenericSerialiser" alias="serializer"/>
+  <alias name="rjs1Serializer" alias="serializer"/>
+  <!--alias name="edaAvroGenericSerialiser" alias="serializer"/>-->
   <alias name="splitDeserialiser" alias="deserializer"/>
 
-<!--  <alias name="rjs1Serializer" alias="serializer"/>-->
+
 <!--  <alias name="decoratedRjs1Serializer" alias="deserializer"/>-->
 
 </beans>

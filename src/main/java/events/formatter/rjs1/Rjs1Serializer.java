@@ -5,10 +5,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import events.IMessage;
 import events.formatter.ISerializeMessage;
+import events.formatter.formatterConstants;
+
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
 public class Rjs1Serializer implements ISerializeMessage {
+
+  @Override
+  public String nameSerde() {
+    return formatterConstants.RSJ1;
+  }
 
   public ByteArrayOutputStream serialize(IMessage message) throws Exception {
     GsonClassDto dto = new GsonClassDto();
