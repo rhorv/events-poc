@@ -1,12 +1,16 @@
 package events.publisher.rabbitmq;
 
+import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import events.IMessage;
+import events.formatter.Envelope;
 import events.formatter.ISerializeMessage;
 import events.publisher.IPublish;
-import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RabbitMqPublisher implements IPublish {
 
@@ -33,8 +37,15 @@ public class RabbitMqPublisher implements IPublish {
     Connection connection = connect();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(this.exchangeName, "fanout", true);
-    ByteArrayOutputStream body = this.formatter.serialize(message);
-    channel.basicPublish(this.exchangeName, "", null, body.toByteArray());
-    System.out.println("[x] Published '" + body + "'");
+    Envelope envelope = this.formatter.serialize(message);
+    Map<String, Object> header = new HashMap<>();
+    for (Map.Entry<String, String> entry : envelope.getHeader().entrySet()) {
+      header.put(entry.getKey(), entry.getValue());
+    }
+    BasicProperties properties = new BasicProperties(null, null, header, null, null, null, null,
+        null, null, null, null, null, null, null);
+    channel.basicPublish(this.exchangeName, "", properties, envelope.getBody());
+    System.out
+        .println("[x] Published '" + new String(envelope.getBody(), StandardCharsets.UTF_8) + "'");
   }
 }

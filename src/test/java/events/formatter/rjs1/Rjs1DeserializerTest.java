@@ -1,14 +1,18 @@
 package events.formatter.rjs1;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import events.IMessage;
+import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
-import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,12 +36,13 @@ class Rjs1DeserializerTest {
         Exception.class,
         () -> {
           this.deserializer.deserialize(
-              new ByteArrayInputStream(invalidJson.getBytes(StandardCharsets.UTF_8)));
+              Envelope.v1(UUID.randomUUID().toString(), Rjs1Deserializer.NAME,
+                  invalidJson.getBytes(StandardCharsets.UTF_8)));
         });
   }
 
   @Test
-  void testItThrowsOnInvalidJsonBySchema() {
+  void testItThrowsOnNonSchemaCompliantJson() {
     String nonCompliantJson = "{}";
     when(this.provider.get())
         .thenReturn(
@@ -55,7 +60,24 @@ class Rjs1DeserializerTest {
         Exception.class,
         () -> {
           this.deserializer.deserialize(
-              new ByteArrayInputStream(nonCompliantJson.getBytes(StandardCharsets.UTF_8)));
+              Envelope.v1(UUID.randomUUID().toString(), Rjs1Deserializer.NAME,
+                  nonCompliantJson.getBytes(StandardCharsets.UTF_8)));
+        });
+  }
+
+  @Test
+  void testItThrowsOnNonCompatibleEnvelope() throws Exception {
+    String json = "{}";
+    when(this.provider.get()).thenReturn("{}");
+
+    Map<String, String> header = new HashMap<String, String>();
+    header.put("headerVersion", "0");
+
+    assertThrows(
+        Exception.class,
+        () -> {
+          this.deserializer
+              .deserialize(new Envelope(header, json.getBytes(StandardCharsets.UTF_8)));
         });
   }
 
@@ -67,7 +89,8 @@ class Rjs1DeserializerTest {
 
     IMessage message =
         this.deserializer.deserialize(
-            new ByteArrayInputStream(validJson.getBytes(StandardCharsets.UTF_8)));
+            Envelope.v1(UUID.randomUUID().toString(), Rjs1Deserializer.NAME,
+                validJson.getBytes(StandardCharsets.UTF_8)));
     assertEquals(message.getName(), "event_name");
     assertEquals(message.getCategory(), "event");
     assertEquals(message.getVersion(), 1);

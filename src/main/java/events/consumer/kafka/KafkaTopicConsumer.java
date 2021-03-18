@@ -2,17 +2,17 @@ package events.consumer.kafka;
 
 import events.consumer.IConsume;
 import events.dispatcher.IDispatch;
+import events.formatter.Envelope;
 import events.formatter.IDeserializeMessage;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.serialization.LongDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.header.Header;
 
 public class KafkaTopicConsumer implements IConsume {
 
@@ -29,16 +29,18 @@ public class KafkaTopicConsumer implements IConsume {
     this.topicName = topicName;
   }
 
-  private Consumer<Long, String> createConsumer(String server, String topicName) {
+  private Consumer<Long, byte[]> createConsumer(String server, String topicName) {
     final Properties props = new Properties();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaExampleConsumer");
-    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class.getName());
-    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+        "org.apache.kafka.common.serialization.LongDeserializer");
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+        "org.apache.kafka.common.serialization.ByteArrayDeserializer");
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
     // Create the consumer using props.
-    final Consumer<Long, String> consumer = new KafkaConsumer<>(props);
+    final Consumer<Long, byte[]> consumer = new KafkaConsumer<>(props);
 
     // Subscribe to the topic.
     consumer.subscribe(Collections.singletonList(topicName));
@@ -46,11 +48,11 @@ public class KafkaTopicConsumer implements IConsume {
   }
 
   private void runConsumer(Integer giveUp) throws InterruptedException {
-    Consumer<Long, String> consumer = createConsumer(this.server, this.topicName);
+    Consumer<Long, byte[]> consumer = createConsumer(this.server, this.topicName);
     int noRecordsCount = 0;
 
     while (true) {
-      final ConsumerRecords<Long, String> consumerRecords = consumer.poll(1000);
+      final ConsumerRecords<Long, byte[]> consumerRecords = consumer.poll(1000);
 
       if (consumerRecords.count() == 0) {
         noRecordsCount++;
@@ -67,9 +69,11 @@ public class KafkaTopicConsumer implements IConsume {
                 "[x] Consumer Record:(%d, %s, %d, %d)\n",
                 record.key(), record.value(), record.partition(), record.offset());
             try {
-              dispatcher.dispatch(
-                  formatter.deserialize(
-                      new ByteArrayInputStream(record.value().getBytes(StandardCharsets.UTF_8))));
+              Map<String, String> headers = new HashMap<>();
+              for (Header header : record.headers().toArray()) {
+                headers.put(header.key(), new String(header.value()));
+              }
+              dispatcher.dispatch(formatter.deserialize(new Envelope(headers, record.value())));
               consumer.commitAsync();
             } catch (Exception e) {
               e.printStackTrace();

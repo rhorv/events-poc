@@ -7,5 +7,5 @@ import java.io.OutputStream;
 
 public interface ISerializeMessage {
 
-  public ByteArrayOutputStream serialize(IMessage message) throws Exception;
+  public Envelope serialize(IMessage message) throws Exception;
 }

@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import events.IMessage;
 import events.Message;
-import java.io.ByteArrayOutputStream;
+import events.formatter.Envelope;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import org.joda.time.DateTime;
@@ -31,10 +31,10 @@ class Rjs1SerializerTest {
     IMessage message = new Message("event_name", payload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
 
-    ByteArrayOutputStream jsonMessage = this.serializer.serialize(message);
+    Envelope serializedMessage = this.serializer.serialize(message);
 
     JsonParser parser = new JsonParser();
-    JsonElement tree = parser.parse(new String(jsonMessage.toByteArray(), StandardCharsets.UTF_8));
+    JsonElement tree = parser.parse(new String(serializedMessage.getBody(), StandardCharsets.UTF_8));
 
     assertEquals(((JsonObject) tree).get("name").getAsString(), "event_name");
     assertEquals(((JsonObject) tree).get("category").getAsString(), "event");
