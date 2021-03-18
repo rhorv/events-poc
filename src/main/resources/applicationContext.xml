@@ -79,6 +79,14 @@
       </map>
     </constructor-arg>
   </bean>
+  <bean id="splitDeserialiser" class="events.formatter.SplitDeserialiser">
+    <constructor-arg>
+      <map>
+        <entry key="edaAvroGeneric" value-ref="edaAvroGenericDeserialiser"/>
+        <entry key="rjs1" value-ref="rjs1Deserializer"/>
+      </map>
+    </constructor-arg>
+  </bean>
 
   <bean id="transactionChargeHandler" class="application.handler.TransactionChargeHandler">
     <constructor-arg ref="messagePublisher"/>
@@ -91,7 +99,7 @@
   <alias name="kafkaConsumer" alias="messageConsumer"/>
   <alias name="guavaDispatcher" alias="dispatcher"/>
   <alias name="edaAvroGenericSerialiser" alias="serializer"/>
-  <alias name="edaAvroGenericDeserialiser" alias="deserializer"/>
+  <alias name="splitDeserialiser" alias="deserializer"/>
 
 <!--  <alias name="rjs1Serializer" alias="serializer"/>-->
 <!--  <alias name="decoratedRjs1Serializer" alias="deserializer"/>-->

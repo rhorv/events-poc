@@ -8,27 +8,28 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import events.consumer.IConsume;
 import events.dispatcher.IDispatch;
-import events.formatter.IDeserializeMessage;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import org.apache.commons.io.IOUtils;
+
+import events.formatter.SplitDeserialiser;
 
 public class RabbitMqConsumer implements IConsume {
 
   private Connection connection;
-  private IDeserializeMessage formatter;
+  private SplitDeserialiser deserialiser;
   private IDispatch dispatcher;
   private ConnectionFactory connectionFactory;
   private String queueName;
 
   public RabbitMqConsumer(
-      IDeserializeMessage formatter,
+          SplitDeserialiser deserialiser,
       IDispatch dispatcher,
       ConnectionFactory connectionFactory,
       String queueName
   ) throws Exception {
-    this.formatter = formatter;
+    this.deserialiser = deserialiser;
     this.dispatcher = dispatcher;
     this.connectionFactory = connectionFactory;
     this.queueName = queueName;
@@ -57,7 +58,7 @@ public class RabbitMqConsumer implements IConsume {
             long deliveryTag = envelope.getDeliveryTag();
             System.out.println("[x] Received '" + new String(body, StandardCharsets.UTF_8) + "'");
             try {
-              dispatcher.dispatch(formatter.deserialize(new ByteArrayInputStream(body)));
+              dispatcher.dispatch(deserialiser.deserialize("rjs1", new ByteArrayInputStream(body)));
               channel.basicAck(deliveryTag, false);
             } catch (Exception e) {
               channel.basicNack(deliveryTag, false, true);

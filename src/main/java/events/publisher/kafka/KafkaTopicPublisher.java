@@ -47,13 +47,13 @@ public class KafkaTopicPublisher implements IPublish {
         record.headers().add("headerVersion", "1".getBytes() );
         record.headers().add("eventId", message.getEventId().getBytes() );
         record.headers().add("name", message.getName().getBytes() );
-        record.headers().add("nameSerde", "edaAvroGenericDeserialiser".getBytes() );
+        record.headers().add("nameSerde", "edaAvroGeneric".getBytes() );
 
         RecordMetadata metadata = producer.send(record).get();
 
         long elapsedTime = System.currentTimeMillis() - time;
         System.out.printf(
-            "[x] sent \"meta(partition=%d, offset=%d, time=%d)\\n\" + record(key=%s value=%s) ",
+            "[x] sent \"meta(partition=%d, offset=%d, time=%d)\\n\" + record(key=%s value=%s) \n",
                 metadata.partition(), metadata.offset(), elapsedTime, record.key(), body.toString());
       }
     } finally {

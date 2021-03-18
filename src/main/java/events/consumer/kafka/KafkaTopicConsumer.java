@@ -2,32 +2,32 @@ package events.consumer.kafka;
 
 import events.consumer.IConsume;
 import events.dispatcher.IDispatch;
-import events.formatter.IDeserializeMessage;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
+
+import events.formatter.SplitDeserialiser;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.header.Header;
-import org.apache.kafka.common.serialization.LongDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.header.Headers;
 
 public class KafkaTopicConsumer implements IConsume {
 
-  private IDeserializeMessage formatter;
+  private SplitDeserialiser deserialiser;
   private IDispatch dispatcher;
   private String server;
   private String topicName;
 
   public KafkaTopicConsumer(
-      IDeserializeMessage formatter, IDispatch dispatcher, String server, String topicName) {
-    this.formatter = formatter;
+          SplitDeserialiser deserialiser, IDispatch dispatcher, String server, String topicName) {
+    this.deserialiser = deserialiser;
     this.dispatcher = dispatcher;
     this.server = server;
     this.topicName = topicName;
@@ -68,14 +68,13 @@ public class KafkaTopicConsumer implements IConsume {
       consumerRecords.forEach(
           record -> {
             try {
-              ByteArrayInputStream payLoad = new ByteArrayInputStream(record.value());
               System.out.printf(
-                      "[x] Consumer Record:(%d, %d, %d, %s)\n",
-                      record.partition(), record.offset(), record.key(), payLoad.toString());
-              //Iterable<Header> serdesName = record.headers().headers("nameSerde");
-              //Class<?> serdesClass = Class.forName(serdesName.toString());
-              // IDeserializeMessage serdes = (IDeserializeMessage)serdesClass.newInstance();
-              dispatcher.dispatch(formatter.deserialize(payLoad));
+                      "[x] Consumer Record:(Partition=%d, Offset=%d, Key=%d, Payload=%s)\n",
+                      record.partition(), record.offset(), record.key(), new String(record.value(), StandardCharsets.UTF_8));
+
+              ByteArrayInputStream payLoad = new ByteArrayInputStream(record.value());
+              String s1 = new String( record.headers().lastHeader("nameSerde").value(), StandardCharsets.UTF_8 );
+              dispatcher.dispatch(deserialiser.deserialize("edaAvroGeneric", payLoad));
               consumer.commitAsync();
             } catch (Exception e) {
               e.printStackTrace();
