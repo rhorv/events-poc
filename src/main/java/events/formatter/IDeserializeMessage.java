@@ -5,5 +5,5 @@ import java.io.ByteArrayInputStream;
 
 public interface IDeserializeMessage {
 
-  public IMessage deserialize(ByteArrayInputStream body) throws Exception;
+  public IMessage deserialize(Envelope envelope) throws Exception;
 }

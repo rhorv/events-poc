@@ -5,9 +5,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import events.IMessage;
 import events.Message;
+import events.formatter.Envelope;
 import events.formatter.IDeserializeMessage;
 import events.formatter.IProvideSchema;
-import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -18,14 +18,19 @@ import org.json.JSONTokener;
 public class Rjs1Deserializer implements IDeserializeMessage {
 
   private IProvideSchema schemaProvider;
+  public static final String NAME = "rjs1";
 
   public Rjs1Deserializer(IProvideSchema schemaProvider) {
     this.schemaProvider = schemaProvider;
   }
 
-  public IMessage deserialize(ByteArrayInputStream body) throws Exception {
+  public IMessage deserialize(Envelope envelope) throws Exception {
 
-    String messageBody = byteArrayToString(body);
+    if (!envelope.compatibleWith(1)) {
+      throw new Exception();
+    }
+
+    String messageBody = new String(envelope.getBody(), StandardCharsets.UTF_8);
     JSONObject rawSchema = new JSONObject(new JSONTokener(this.schemaProvider.get()));
     Schema schema = SchemaLoader.load(rawSchema);
     schema.validate(
@@ -39,12 +44,5 @@ public class Rjs1Deserializer implements IDeserializeMessage {
 
     return new Message(
         dto.name, dto.payload.get("transactionId"), dto.payload, dto.version, new DateTime(dto.occurredAt), dto.category);
-  }
-
-  private String byteArrayToString(ByteArrayInputStream in) {
-    int n = in.available();
-    byte[] bytes = new byte[n];
-    in.read(bytes, 0, n);
-    return new String(bytes, StandardCharsets.UTF_8);
   }
 }

@@ -5,15 +5,25 @@
                 http://www.springframework.org/schema/beans
                 http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+  <bean id="rjs1SchemaProvider" class="events.formatter.rjs1.HardCodedSchemaProvider"/>
   <bean id="rjs1Deserializer" class="events.formatter.rjs1.Rjs1Deserializer">
-    <constructor-arg ref="schemaProvider"/>
+    <constructor-arg ref="rjs1SchemaProvider"/>
   </bean>
   <bean id="rjs1Serializer" class="events.formatter.rjs1.Rjs1Serializer">
     <constructor-arg ref="schemaProvider"/>
   </bean>
   <bean id="decoratedRjs1Serializer" class="events.formatter.rjs1.SerializedValidatorDecorator">
     <constructor-arg ref="rjs1Serializer"/>
-    <constructor-arg ref="schemaProvider"/>
+    <constructor-arg ref="rjs1SchemaProvider"/>
+  </bean>
+
+  <bean id="messageFamilyAwareDeserializer" class="events.formatter.MessageFamilyAwareDeserializer">
+    <constructor-arg>
+      <map>
+        <entry key="#{T(events.formatter.rjs1.Rjs1Deserializer).NAME}" value-ref="rjs1Deserializer"/>
+        <entry key="#{T(events.formatter.hav1.Hav1Deserializer).NAME}" value-ref="hav1Deserializer"/>
+      </map>
+    </constructor-arg>
   </bean>
 
   <bean id="edaAvroGenericSerialiser" class="events.formatter.edaAvroSerDes.EdaAvroGenericSerialiser">
@@ -107,11 +117,11 @@
   <alias name="splitKafkaPublisher" alias="messagePublisher"/>
   <alias name="kafkaConsumer" alias="messageConsumer"/>
   <alias name="guavaDispatcher" alias="dispatcher"/>
-  <!--<alias name="rjs1Serializer" alias="serializer"/>-->
   <alias name="edaAvroGenericSerialiser" alias="serializer"/>
-  <alias name="splitDeserialiser" alias="deserializer"/>
-
-
-<!--  <alias name="decoratedRjs1Serializer" alias="deserializer"/>-->
+  <alias name="messageFamilyAwareDeserializer" alias="deserializer"/>
+  <!--alias name="splitDeserialiser" alias="deserializer"/-->
+  <!--<alias name="rjs1Serializer" alias="serializer"/>-->
+  <!--  <alias name="decoratedRjs1Serializer" alias="deserializer"/>-->
+  <!--  <alias name="hav1Serializer" alias="serializer"/>-->
 
 </beans>

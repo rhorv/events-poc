@@ -1,10 +1,12 @@
 package events.publisher.kafka;
 
 import events.IMessage;
+import events.formatter.Envelope;
 import events.formatter.ISerializeMessage;
 import events.publisher.IPublish;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -40,14 +42,13 @@ public class KafkaTopicPublisher implements IPublish {
 
     try {
       for (long index = time; index < time + 1; index++) {
-        ByteArrayOutputStream body = this.formatter.serialize(message);
+        Envelope envelope = this.formatter.serialize(message);
         final ProducerRecord<Long, byte[]> record =
             new ProducerRecord<>(
-                this.topicName, index, body.toByteArray());
-        record.headers().add("headerVersion", "1".getBytes() );
-        record.headers().add("eventId", message.getEventId().getBytes() );
-        record.headers().add("name", message.getName().getBytes() );
-        record.headers().add("nameSerde", formatter.nameSerde().getBytes() );
+                this.topicName, index, envelope.getBody());
+        for (Map.Entry<String, String> entry : envelope.getHeader().entrySet()) {
+          record.headers().add(entry.getKey(), entry.getValue().getBytes(StandardCharsets.UTF_8));
+        }
 
         RecordMetadata metadata = producer.send(record).get();
 

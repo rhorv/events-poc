@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import events.IMessage;
 import events.Message;
+import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
 import java.io.ByteArrayOutputStream;
@@ -14,8 +15,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.UUID;
-
-import org.apache.commons.compress.utils.ByteUtils.OutputStreamByteConsumer;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,7 @@ class SerializedValidatorDecoratorTest {
   }
 
   @Test
-  void testItThrowsOnInvalidJsonBySchema() throws Exception {
+  void testItThrowsOnNonSchemaCompliantJson() throws Exception {
     when(this.provider.get()).thenReturn("{\n" +
         "  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n" +
         "  \"type\": \"object\",\n" +
@@ -46,10 +45,10 @@ class SerializedValidatorDecoratorTest {
         "  \"required\": [ \"somefield\" ]\n" +
         "}");
 
-    IMessage message = new Message("name", UUID.randomUUID().toString(), new HashMap<String, String>(), 1, new DateTime(),
+    IMessage message = new Message("name", new HashMap<String, String>(), 1, new DateTime(),
         "event");
-    ByteArrayOutputStream emptyResponse = new ByteArrayOutputStream();
-    emptyResponse.write("{}".getBytes(StandardCharsets.UTF_8));
+    Envelope emptyResponse = Envelope.v1(UUID.randomUUID().toString(), Rjs1Serializer.NAME,
+        "{}".getBytes(StandardCharsets.UTF_8));
     when(this.serializer.serialize(message)).thenReturn(emptyResponse);
 
     assertThrows(Exception.class, () -> {
@@ -61,10 +60,10 @@ class SerializedValidatorDecoratorTest {
   void testItThrowsOnInvalidJson() throws Exception {
     when(this.provider.get()).thenReturn("{}");
 
-    IMessage message = new Message("name", UUID.randomUUID().toString(), new HashMap<String, String>(), 1, new DateTime(),
+    IMessage message = new Message("name", new HashMap<String, String>(), 1, new DateTime(),
         "event");
-    ByteArrayOutputStream invalidResponse = new ByteArrayOutputStream();
-    invalidResponse.write("invalid".getBytes(StandardCharsets.UTF_8));
+    Envelope invalidResponse = Envelope.v1(UUID.randomUUID().toString(), Rjs1Serializer.NAME,
+        "invalid".getBytes(StandardCharsets.UTF_8));
     when(this.serializer.serialize(message)).thenReturn(invalidResponse);
 
     assertThrows(Exception.class, () -> {
@@ -73,7 +72,7 @@ class SerializedValidatorDecoratorTest {
   }
 
   @Test
-  void testItReturnsTheOriginalJsonIfItMatchesTheSchema() throws Exception {
+  void testItReturnsTheOriginalEnvelopeIfItMatchesTheSchemaForTheBody() throws Exception {
     String json = "{ \"somefield\": \"somevalue\" }";
     when(this.provider.get()).thenReturn("{\n" +
         "  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n" +
@@ -87,10 +86,11 @@ class SerializedValidatorDecoratorTest {
         "}");
     // This message is irrelevant, we are only testing this decorator
     // The values it uses it will get from the mocks, we are just checking that they are unmodified
-    IMessage message = new Message("name", UUID.randomUUID().toString(), new HashMap<String, String>(), 1, new DateTime(),
+    IMessage message = new Message("name", new HashMap<String, String>(), 1, new DateTime(),
         "event");
-    ByteArrayOutputStream original = new ByteArrayOutputStream();
-    original.write(json.getBytes(StandardCharsets.UTF_8));
+
+    Envelope original = Envelope.v1(UUID.randomUUID().toString(), Rjs1Serializer.NAME,
+        json.getBytes(StandardCharsets.UTF_8));
     when(this.serializer.serialize(message)).thenReturn(original);
 
     assertEquals(this.decorator.serialize(message), original);

@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-
-import events.formatter.SplitDeserialiser;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -20,14 +20,14 @@ import org.apache.kafka.common.header.Headers;
 
 public class KafkaTopicConsumer implements IConsume {
 
-  private SplitDeserialiser deserialiser;
+  private IDeserializeMessage formatter;
   private IDispatch dispatcher;
   private String server;
   private String topicName;
 
   public KafkaTopicConsumer(
-          SplitDeserialiser deserialiser, IDispatch dispatcher, String server, String topicName) {
-    this.deserialiser = deserialiser;
+      IDeserializeMessage formatter, IDispatch dispatcher, String server, String topicName) {
+    this.formatter = formatter;
     this.dispatcher = dispatcher;
     this.server = server;
     this.topicName = topicName;
@@ -67,14 +67,19 @@ public class KafkaTopicConsumer implements IConsume {
 
       consumerRecords.forEach(
           record -> {
+            System.out.printf(
+                "[x] Consumer Record:(%d, %s, %d, %d)\n",
+                record.key(), record.value(), record.partition(), record.offset());
             try {
               System.out.printf(
                       "[x] Consumer Record:(Partition=%d, Offset=%d, Key=%d, Payload=%s)\n",
                       record.partition(), record.offset(), record.key(), new String(record.value(), StandardCharsets.UTF_8));
 
-              ByteArrayInputStream payLoad = new ByteArrayInputStream(record.value());
-              String serde = new String( record.headers().lastHeader("nameSerde").value(), StandardCharsets.UTF_8 );
-              dispatcher.dispatch(deserialiser.deserialize(serde, payLoad));
+              Map<String, String> headers = new HashMap<>();
+              for (Header header : record.headers().toArray()) {
+                headers.put(header.key(), new String(header.value()));
+              }
+              dispatcher.dispatch(formatter.deserialize(new Envelope(headers, record.value())));
               consumer.commitAsync();
             } catch (Exception e) {
               e.printStackTrace();

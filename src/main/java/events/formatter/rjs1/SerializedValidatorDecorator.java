@@ -1,6 +1,7 @@
 package events.formatter.rjs1;
 
 import events.IMessage;
+import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
 import java.io.ByteArrayOutputStream;
@@ -23,15 +24,15 @@ public class SerializedValidatorDecorator implements ISerializeMessage {
     this.schemaProvider = schemaProvider;
   }
 
-  public ByteArrayOutputStream serialize(IMessage message) throws Exception {
-    ByteArrayOutputStream output = this.messageSerializer.serialize(message);
+  public Envelope serialize(IMessage message) throws Exception {
+    Envelope output = this.messageSerializer.serialize(message);
 
     JSONObject rawSchema = new JSONObject(new JSONTokener(this.schemaProvider.get()));
     Schema schema = SchemaLoader.load(rawSchema);
     schema.validate(
         new JSONObject(
             new String(
-                output.toByteArray(),
+                output.getBody(),
                 StandardCharsets.UTF_8))); // throws a ValidationException if this object is invalid
 
     return output;

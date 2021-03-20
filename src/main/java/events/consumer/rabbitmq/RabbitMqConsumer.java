@@ -8,28 +8,27 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import events.consumer.IConsume;
 import events.dispatcher.IDispatch;
-
-import java.io.ByteArrayInputStream;
+import events.formatter.IDeserializeMessage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-
-import events.formatter.SplitDeserialiser;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RabbitMqConsumer implements IConsume {
 
   private Connection connection;
-  private SplitDeserialiser deserialiser;
+  private IDeserializeMessage formatter;
   private IDispatch dispatcher;
   private ConnectionFactory connectionFactory;
   private String queueName;
 
   public RabbitMqConsumer(
-          SplitDeserialiser deserialiser,
+      IDeserializeMessage formatter,
       IDispatch dispatcher,
       ConnectionFactory connectionFactory,
       String queueName
   ) throws Exception {
-    this.deserialiser = deserialiser;
+    this.formatter = formatter;
     this.dispatcher = dispatcher;
     this.connectionFactory = connectionFactory;
     this.queueName = queueName;
@@ -57,8 +56,13 @@ public class RabbitMqConsumer implements IConsume {
             String contentType = properties.getContentType();
             long deliveryTag = envelope.getDeliveryTag();
             System.out.println("[x] Received '" + new String(body, StandardCharsets.UTF_8) + "'");
+            Map<String, String> header = new HashMap<>();
+            for (Map.Entry<String, Object> entry : properties.getHeaders().entrySet()) {
+              header.put(entry.getKey(), entry.getValue().toString());
+            }
             try {
-              dispatcher.dispatch(deserialiser.deserialize("rjs1", new ByteArrayInputStream(body)));
+              dispatcher
+                  .dispatch(formatter.deserialize(new events.formatter.Envelope(header, body)));
               channel.basicAck(deliveryTag, false);
             } catch (Exception e) {
               channel.basicNack(deliveryTag, false, true);

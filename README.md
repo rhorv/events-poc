@@ -196,3 +196,17 @@ RabbitMQ:
 ``<alias name="rabbitConsumer" alias="messageConsumer" />``
 
 Change one for the other if you want to switch technologies 
+
+## Message formats 
+
+Generic AVRO serialization was added. From now on, the deserializer is picked dynamically based on the message header,  
+while serialization remains controlled by the DI container configuration (as expected).
+
+In order to change between publish formats, just alias your preferred serializer as "serializer"  
+(both are provided in the applicationContext.xml - one commented and one active)
+
+rjs1:  
+``<alias name="decoratedRjs1Serializer" alias="serializer"/>``  
+
+hav1:  
+``<alias name="hav1Serializer" alias="serializer"/>``  
