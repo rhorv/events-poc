@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -7,11 +7,11 @@ import static org.mockito.Mockito.when;
 
 import events.IMessage;
 import events.Message;
+import events.formatter.EDAFormatterConstants;
 import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
+
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.UUID;
@@ -44,10 +44,10 @@ class SerializedValidatorDecoratorTest {
         "  },\n" +
         "  \"required\": [ \"somefield\" ]\n" +
         "}");
-
-    IMessage message = new Message("name", new HashMap<String, String>(), 1, new DateTime(),
+    UUID uuid = UUID.randomUUID();
+    IMessage message = new Message("name", uuid.toString(), new HashMap<String, String>(), 1, new DateTime(),
         "event");
-    Envelope emptyResponse = Envelope.v1(UUID.randomUUID().toString(), Rjs1Serializer.NAME,
+    Envelope emptyResponse = Envelope.v1(uuid.toString(), EDAFormatterConstants.RSJ1,
         "{}".getBytes(StandardCharsets.UTF_8));
     when(this.serializer.serialize(message)).thenReturn(emptyResponse);
 
@@ -60,9 +60,10 @@ class SerializedValidatorDecoratorTest {
   void testItThrowsOnInvalidJson() throws Exception {
     when(this.provider.get()).thenReturn("{}");
 
-    IMessage message = new Message("name", new HashMap<String, String>(), 1, new DateTime(),
+    UUID uuid = UUID.randomUUID();
+    IMessage message = new Message("name", uuid.toString(), new HashMap<String, String>(), 1, new DateTime(),
         "event");
-    Envelope invalidResponse = Envelope.v1(UUID.randomUUID().toString(), Rjs1Serializer.NAME,
+    Envelope invalidResponse = Envelope.v1(uuid.toString(), EDAFormatterConstants.RSJ1,
         "invalid".getBytes(StandardCharsets.UTF_8));
     when(this.serializer.serialize(message)).thenReturn(invalidResponse);
 
@@ -86,10 +87,11 @@ class SerializedValidatorDecoratorTest {
         "}");
     // This message is irrelevant, we are only testing this decorator
     // The values it uses it will get from the mocks, we are just checking that they are unmodified
-    IMessage message = new Message("name", new HashMap<String, String>(), 1, new DateTime(),
+    UUID uuid = UUID.randomUUID();
+    IMessage message = new Message("name", uuid.toString(), new HashMap<String, String>(), 1, new DateTime(),
         "event");
 
-    Envelope original = Envelope.v1(UUID.randomUUID().toString(), Rjs1Serializer.NAME,
+    Envelope original = Envelope.v1(uuid.toString(), EDAFormatterConstants.RSJ1,
         json.getBytes(StandardCharsets.UTF_8));
     when(this.serializer.serialize(message)).thenReturn(original);
 

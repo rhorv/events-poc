@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,7 +22,7 @@ class Rjs1SerializerTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    this.serializer = new Rjs1Serializer(new HardCodedSchemaProvider());
+    this.serializer = new Rjs1Serializer(new EDAJsonHardCodedSchemaProvider());
   }
 
   @Test

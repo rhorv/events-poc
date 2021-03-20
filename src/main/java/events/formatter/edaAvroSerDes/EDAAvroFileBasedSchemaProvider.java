@@ -1,10 +1,12 @@
-package events.formatter;
+package events.formatter.edaAvroSerDes;
+
+import events.formatter.IProvideSchema;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class EDAFileBasedSchemaProvider implements IProvideSchema {
+public class EDAAvroFileBasedSchemaProvider implements IProvideSchema {
     @Override
     public String get() {
         String schema = "";

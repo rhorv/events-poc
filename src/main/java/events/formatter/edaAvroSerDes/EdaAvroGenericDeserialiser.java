@@ -2,6 +2,7 @@ package events.formatter.edaAvroSerDes;
 
 import events.IMessage;
 import events.Message;
+import events.formatter.Envelope;
 import events.formatter.IDeserializeMessage;
 import events.formatter.IProvideSchema;
 import org.apache.avro.Schema;
@@ -14,11 +15,8 @@ import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
-
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class EdaAvroGenericDeserialiser implements IDeserializeMessage {
@@ -38,8 +36,13 @@ public class EdaAvroGenericDeserialiser implements IDeserializeMessage {
         this.decoderFactory = DecoderFactory.get();
     }
 
-    public IMessage deserialize(ByteArrayInputStream body) throws Exception {
-        BinaryDecoder avroDecoder = decoderFactory.binaryDecoder(body, null);
+    @Override
+    public IMessage deserialize(Envelope envelope) throws Exception {
+        if (!envelope.compatibleWith(1)) {
+            throw new Exception();
+        }
+
+        BinaryDecoder avroDecoder = decoderFactory.binaryDecoder(envelope.getBody(), null);
         avroReader.read(avroRecord, avroDecoder);
 
         return new Message(

@@ -1,19 +1,24 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import events.IMessage;
 import events.formatter.Envelope;
+import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
-import java.io.ByteArrayOutputStream;
+import events.formatter.EDAFormatterConstants;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class Rjs1Serializer implements ISerializeMessage {
+  private IProvideSchema schemaProvider;
 
-  public static final String NAME = "rjs1";
+  public Rjs1Serializer(IProvideSchema schemaProvider) {
+    this.schemaProvider = schemaProvider;
+  }
 
   public Envelope serialize(IMessage message) throws Exception {
     GsonClassDto dto = new GsonClassDto();
@@ -29,6 +34,6 @@ public class Rjs1Serializer implements ISerializeMessage {
         .create();
     String jsonString = gson.toJson(dto);
     Map<String, String> header = new HashMap<>();
-    return Envelope.v1(dto.id, NAME, jsonString.getBytes());
+    return Envelope.v1(dto.id, EDAFormatterConstants.RSJ1, jsonString.getBytes());
   }
 }

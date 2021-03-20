@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import java.util.HashMap;
 import java.util.Map;

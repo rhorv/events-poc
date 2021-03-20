@@ -4,8 +4,8 @@ import events.IMessage;
 import events.formatter.Envelope;
 import events.formatter.ISerializeMessage;
 import events.publisher.IPublish;
-import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -43,9 +43,7 @@ public class KafkaTopicPublisher implements IPublish {
     try {
       for (long index = time; index < time + 1; index++) {
         Envelope envelope = this.formatter.serialize(message);
-        final ProducerRecord<Long, byte[]> record =
-            new ProducerRecord<>(
-                this.topicName, index, envelope.getBody());
+        final ProducerRecord<Long, byte[]> record = new ProducerRecord<>(this.topicName, index, envelope.getBody());
         for (Map.Entry<String, String> entry : envelope.getHeader().entrySet()) {
           record.headers().add(entry.getKey(), entry.getValue().getBytes(StandardCharsets.UTF_8));
         }
@@ -55,7 +53,7 @@ public class KafkaTopicPublisher implements IPublish {
         long elapsedTime = System.currentTimeMillis() - time;
         System.out.printf(
             "[x] sent \"meta(partition=%d, offset=%d, time=%d)\\n\" + record(key=%s value=%s) \n",
-                metadata.partition(), metadata.offset(), elapsedTime, record.key(), body.toString());
+                metadata.partition(), metadata.offset(), elapsedTime, record.key(), Arrays.toString(envelope.getBody()));
       }
     } finally {
       producer.flush();

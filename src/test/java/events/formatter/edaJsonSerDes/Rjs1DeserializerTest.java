@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import events.IMessage;
+import events.formatter.EDAFormatterConstants;
 import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import java.nio.charset.StandardCharsets;
@@ -36,7 +37,7 @@ class Rjs1DeserializerTest {
         Exception.class,
         () -> {
           this.deserializer.deserialize(
-              Envelope.v1(UUID.randomUUID().toString(), Rjs1Deserializer.NAME,
+              Envelope.v1(UUID.randomUUID().toString(), EDAFormatterConstants.RSJ1,
                   invalidJson.getBytes(StandardCharsets.UTF_8)));
         });
   }
@@ -60,7 +61,7 @@ class Rjs1DeserializerTest {
         Exception.class,
         () -> {
           this.deserializer.deserialize(
-              Envelope.v1(UUID.randomUUID().toString(), Rjs1Deserializer.NAME,
+              Envelope.v1(UUID.randomUUID().toString(), EDAFormatterConstants.RSJ1,
                   nonCompliantJson.getBytes(StandardCharsets.UTF_8)));
         });
   }
@@ -85,11 +86,11 @@ class Rjs1DeserializerTest {
   void testItDeserializesCorrectlyIntoAMessageForValidJson() throws Exception {
     String validJson =
         "{\"id\": \"622178f0-7dc8-41b6-88a9-2ce0f0934066\",\"name\": \"event_name\",\"category\": \"event\",\"payload\": {\"field\": \"value\"},\"occurred_at\": \"2020-09-15T15:53:00+01:00\",\"version\": 1}";
-    when(this.provider.get()).thenReturn(new HardCodedSchemaProvider().get());
+    when(this.provider.get()).thenReturn(new EDAJsonHardCodedSchemaProvider().get());
 
     IMessage message =
         this.deserializer.deserialize(
-            Envelope.v1(UUID.randomUUID().toString(), Rjs1Deserializer.NAME,
+            Envelope.v1(UUID.randomUUID().toString(), EDAFormatterConstants.RSJ1,
                 validJson.getBytes(StandardCharsets.UTF_8)));
     assertEquals(message.getName(), "event_name");
     assertEquals(message.getCategory(), "event");

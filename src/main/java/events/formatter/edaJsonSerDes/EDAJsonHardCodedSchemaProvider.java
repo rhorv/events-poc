@@ -1,8 +1,8 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import events.formatter.IProvideSchema;
 
-public class HardCodedSchemaProvider implements IProvideSchema {
+public class EDAJsonHardCodedSchemaProvider implements IProvideSchema {
 
   public String get() {
     return "{\n"

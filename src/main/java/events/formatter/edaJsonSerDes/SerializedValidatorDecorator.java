@@ -1,13 +1,12 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import events.IMessage;
 import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
-import java.io.ByteArrayOutputStream;
+
 import java.nio.charset.StandardCharsets;
 
-import events.formatter.formatterConstants;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
@@ -36,10 +35,5 @@ public class SerializedValidatorDecorator implements ISerializeMessage {
                 StandardCharsets.UTF_8))); // throws a ValidationException if this object is invalid
 
     return output;
-  }
-
-  @Override
-  public String nameSerde() {
-    return formatterConstants.RSJ1;
   }
 }

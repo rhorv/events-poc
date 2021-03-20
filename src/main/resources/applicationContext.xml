@@ -5,14 +5,14 @@
                 http://www.springframework.org/schema/beans
                 http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <bean id="rjs1SchemaProvider" class="events.formatter.rjs1.HardCodedSchemaProvider"/>
-  <bean id="rjs1Deserializer" class="events.formatter.rjs1.Rjs1Deserializer">
+  <bean id="rjs1SchemaProvider" class="events.formatter.edaJsonSerDes.EDAJsonHardCodedSchemaProvider"/>
+  <bean id="rjs1Deserializer" class="events.formatter.edaJsonSerDes.Rjs1Deserializer">
     <constructor-arg ref="rjs1SchemaProvider"/>
   </bean>
-  <bean id="rjs1Serializer" class="events.formatter.rjs1.Rjs1Serializer">
+  <bean id="rjs1Serializer" class="events.formatter.edaJsonSerDes.Rjs1Serializer">
     <constructor-arg ref="schemaProvider"/>
   </bean>
-  <bean id="decoratedRjs1Serializer" class="events.formatter.rjs1.SerializedValidatorDecorator">
+  <bean id="decoratedRjs1Serializer" class="events.formatter.edaJsonSerDes.SerializedValidatorDecorator">
     <constructor-arg ref="rjs1Serializer"/>
     <constructor-arg ref="rjs1SchemaProvider"/>
   </bean>
@@ -20,7 +20,7 @@
   <bean id="messageFamilyAwareDeserializer" class="events.formatter.MessageFamilyAwareDeserializer">
     <constructor-arg>
       <map>
-        <entry key="#{T(events.formatter.rjs1.Rjs1Deserializer).NAME}" value-ref="rjs1Deserializer"/>
+        <entry key="#{T(events.formatter.edaJsonSerDes.Rjs1Deserializer).NAME}" value-ref="rjs1Deserializer"/>
         <entry key="#{T(events.formatter.hav1.Hav1Deserializer).NAME}" value-ref="hav1Deserializer"/>
       </map>
     </constructor-arg>
@@ -109,8 +109,8 @@
     <constructor-arg ref="messagePublisher"/>
   </bean>
 
-  <bean id="hardCodedSchemaProvider" class="events.formatter.rjs1.HardCodedSchemaProvider"/>
-  <bean id="edaFileBasedSchemaProvider" class="events.formatter.EDAFileBasedSchemaProvider"/>
+  <bean id="hardCodedSchemaProvider" class="events.formatter.edaJsonSerDes.EDAJsonHardCodedSchemaProvider"/>
+  <bean id="edaFileBasedSchemaProvider" class="events.formatter.edaAvroSerDes.EDAAvroFileBasedSchemaProvider"/>
   <bean id="schemaRegistry" class="events.formatter.SchemaRegistry"/>
 
   <alias name="schemaRegistry" alias="schemaProvider"/>

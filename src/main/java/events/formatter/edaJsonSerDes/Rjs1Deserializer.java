@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -18,7 +18,6 @@ import org.json.JSONTokener;
 public class Rjs1Deserializer implements IDeserializeMessage {
 
   private IProvideSchema schemaProvider;
-  public static final String NAME = "rjs1";
 
   public Rjs1Deserializer(IProvideSchema schemaProvider) {
     this.schemaProvider = schemaProvider;

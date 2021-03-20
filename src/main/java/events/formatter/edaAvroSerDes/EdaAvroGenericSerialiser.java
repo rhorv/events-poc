@@ -1,9 +1,10 @@
 package events.formatter.edaAvroSerDes;
 
 import events.IMessage;
+import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
-import events.formatter.formatterConstants;
+import events.formatter.EDAFormatterConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
@@ -12,8 +13,9 @@ import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class EdaAvroGenericSerialiser implements ISerializeMessage {
@@ -31,10 +33,11 @@ public class EdaAvroGenericSerialiser implements ISerializeMessage {
         this.encoderFactory = EncoderFactory.get();
     }
 
-    public ByteArrayOutputStream serialize(IMessage message) throws Exception {
+    public Envelope serialize(IMessage message) throws Exception {
 
+        UUID uuid = UUID.randomUUID();
         GenericRecord avroRecord = new GenericData.Record(avroSchema);
-        avroRecord.put("eventId", UUID.randomUUID().toString());
+        avroRecord.put("eventId", uuid.toString());
         avroRecord.put("name", message.getName());
         avroRecord.put("category", message.getCategory());
         avroRecord.put("occurredAt", message.getOccurredAt().toString());
@@ -45,12 +48,9 @@ public class EdaAvroGenericSerialiser implements ISerializeMessage {
         BinaryEncoder avroEncoder = encoderFactory.binaryEncoder(stream, null);
         avroWriter.write(avroRecord, avroEncoder);
         avroEncoder.flush();
-        return stream;
-    }
 
-    @Override
-    public String nameSerde() {
-        return formatterConstants.EDA_AVRO_GENERIC;
+        Map<String, String> header = new HashMap<>();
+        return Envelope.v1(uuid.toString(), EDAFormatterConstants.EDA_AVRO_GENERIC, stream.toByteArray());
     }
 
     public byte[] jsonToAvro(String json, Schema schema) throws IOException {
