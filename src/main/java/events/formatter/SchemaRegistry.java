@@ -11,13 +11,13 @@ public class SchemaRegistry implements IProvideSchema {
 
     public String getSchema(String subject) throws IOException, InterruptedException {
         // create a client
-        var client = HttpClient.newHttpClient();
+        HttpClient client = HttpClient.newHttpClient();
 
         // Prepare URL for request, you need to provide URL of Schema Registry and name of kafka topic
         String url = String.format("%s/subjects/%s-value/versions/latest", "http://schema-registry:8081", subject);
 
         // create a request
-        var request = HttpRequest.newBuilder(URI.create(url))
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .header("accept", "application/json")
                 .build();
 

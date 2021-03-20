@@ -9,8 +9,8 @@
 <version>0.1.0</version>
 
 <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.11</maven.compiler.source>
+    <maven.compiler.target>1.11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 </properties>
@@ -103,12 +103,12 @@
         <artifactId>avro-maven-plugin</artifactId>
         <version>1.10.1</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/io.confluent/kafka-schema-registry-maven-plugin -->
+    <!-- https://mvnrepository.com/artifact/io.confluent/kafka-schema-registry-maven-plugin
     <dependency>
         <groupId>io.confluent</groupId>
         <artifactId>kafka-schema-registry-maven-plugin</artifactId>
         <version>6.0.1</version>
-    </dependency>
+    </dependency> -->
 </dependencies>
 
 <repositories>
@@ -188,14 +188,6 @@
                     </configuration>
                 </execution>
             </executions>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-            </configuration>
         </plugin>
         <!-- https://mvnrepository.com/artifact/io.confluent/kafka-schema-registry-maven-plugin
         <plugin>
