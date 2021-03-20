@@ -1,6 +1,7 @@
 package events.formatter.edaAvroSerDes;
 
 import events.IMessage;
+import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
 import events.formatter.formatterConstants;
 import org.apache.avro.Schema;
@@ -15,15 +16,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-public class edaAvroGenericSerialiser implements ISerializeMessage {
+public class EdaAvroGenericSerialiser implements ISerializeMessage {
     private Schema.Parser parser;
     private Schema avroSchema;
     private GenericDatumWriter<GenericRecord> avroWriter;
     private EncoderFactory encoderFactory;
+    private IProvideSchema schemaProvider;
 
-    public edaAvroGenericSerialiser() throws IOException {
+    public EdaAvroGenericSerialiser(IProvideSchema schemaProvider) throws IOException {
+        this.schemaProvider = schemaProvider;
         this.parser = new Schema.Parser();
-        this.avroSchema = parser.parse( new File("./src/main/avro/events-poc.avsc"));
+        this.avroSchema = parser.parse( schemaProvider.get() );
         this.avroWriter = new GenericDatumWriter<>(avroSchema);
         this.encoderFactory = EncoderFactory.get();
     }

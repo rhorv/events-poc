@@ -54,7 +54,7 @@ public class KafkaTopicConsumer implements IConsume {
     int noRecordsCount = 0;
 
     while (true) {
-      final ConsumerRecords<Long, byte[]> consumerRecords = consumer.poll(Duration.ofSeconds(1000));
+      final ConsumerRecords<Long, byte[]> consumerRecords = consumer.poll(Duration.ofSeconds(10));
 
       if (consumerRecords.count() == 0) {
         noRecordsCount++;

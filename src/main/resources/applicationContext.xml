@@ -5,19 +5,23 @@
                 http://www.springframework.org/schema/beans
                 http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <bean id="schemaProvider" class="events.formatter.rjs1.HardCodedSchemaProvider"/>
   <bean id="rjs1Deserializer" class="events.formatter.rjs1.Rjs1Deserializer">
     <constructor-arg ref="schemaProvider"/>
   </bean>
-
-  <bean id="rjs1Serializer" class="events.formatter.rjs1.Rjs1Serializer"/>
+  <bean id="rjs1Serializer" class="events.formatter.rjs1.Rjs1Serializer">
+    <constructor-arg ref="schemaProvider"/>
+  </bean>
   <bean id="decoratedRjs1Serializer" class="events.formatter.rjs1.SerializedValidatorDecorator">
     <constructor-arg ref="rjs1Serializer"/>
     <constructor-arg ref="schemaProvider"/>
   </bean>
 
-  <bean id="edaAvroGenericSerialiser" class="events.formatter.edaAvroSerDes.edaAvroGenericSerialiser"/>
-  <bean id="edaAvroGenericDeserialiser" class="events.formatter.edaAvroSerDes.edaAvroGenericDeserialiser"/>
+  <bean id="edaAvroGenericSerialiser" class="events.formatter.edaAvroSerDes.EdaAvroGenericSerialiser">
+    <constructor-arg ref="edaFileBasedSchemaProvider"/>
+  </bean>
+  <bean id="edaAvroGenericDeserialiser" class="events.formatter.edaAvroSerDes.EdaAvroGenericDeserialiser">
+    <constructor-arg ref="schemaProvider"/>
+  </bean>
 
   <bean id="guavaDispatcher" class="events.dispatcher.guava.GuavaDispatcher">
   </bean>
@@ -82,8 +86,8 @@
   <bean id="splitDeserialiser" class="events.formatter.SplitDeserialiser">
     <constructor-arg>
       <map>
-        <entry key="edaAvroGeneric" value-ref="edaAvroGenericDeserialiser"/>
-        <entry key="rjs1Generic" value-ref="rjs1Deserializer"/>
+        <entry key="edaAvroGenericEvent" value-ref="edaAvroGenericDeserialiser"/>
+        <entry key="rjs1GenericEvent" value-ref="rjs1Deserializer"/>
       </map>
     </constructor-arg>
   </bean>
@@ -95,11 +99,16 @@
     <constructor-arg ref="messagePublisher"/>
   </bean>
 
+  <bean id="hardCodedSchemaProvider" class="events.formatter.rjs1.HardCodedSchemaProvider"/>
+  <bean id="edaFileBasedSchemaProvider" class="events.formatter.EDAFileBasedSchemaProvider"/>
+  <bean id="schemaRegistry" class="events.formatter.SchemaRegistry"/>
+
+  <alias name="schemaRegistry" alias="schemaProvider"/>
   <alias name="splitKafkaPublisher" alias="messagePublisher"/>
   <alias name="kafkaConsumer" alias="messageConsumer"/>
   <alias name="guavaDispatcher" alias="dispatcher"/>
-  <alias name="rjs1Serializer" alias="serializer"/>
-  <!--alias name="edaAvroGenericSerialiser" alias="serializer"/>-->
+  <!--<alias name="rjs1Serializer" alias="serializer"/>-->
+  <alias name="edaAvroGenericSerialiser" alias="serializer"/>
   <alias name="splitDeserialiser" alias="deserializer"/>
 
 

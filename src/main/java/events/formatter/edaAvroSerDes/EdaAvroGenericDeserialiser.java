@@ -3,6 +3,7 @@ package events.formatter.edaAvroSerDes;
 import events.IMessage;
 import events.Message;
 import events.formatter.IDeserializeMessage;
+import events.formatter.IProvideSchema;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
@@ -20,16 +21,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class edaAvroGenericDeserialiser implements IDeserializeMessage {
+public class EdaAvroGenericDeserialiser implements IDeserializeMessage {
     private Schema.Parser parser;
     private Schema avroSchema;
     private GenericRecord avroRecord;
     private GenericDatumReader<GenericRecord> avroReader;
     private DecoderFactory decoderFactory;
+    private IProvideSchema schemaProvider;
 
-    public edaAvroGenericDeserialiser() throws IOException {
+    public EdaAvroGenericDeserialiser(IProvideSchema schemaProvider) throws IOException {
+        this.schemaProvider = schemaProvider;
         this.parser = new Schema.Parser();
-        this.avroSchema = parser.parse( new File("./src/main/avro/events-poc.avsc"));
+        this.avroSchema = parser.parse( schemaProvider.get() );
         this.avroRecord = new GenericData.Record(avroSchema);
         this.avroReader = new GenericDatumReader<>(avroSchema);
         this.decoderFactory = DecoderFactory.get();

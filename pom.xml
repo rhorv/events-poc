@@ -197,28 +197,28 @@
                 <target>1.8</target>
             </configuration>
         </plugin>
+        <!-- https://mvnrepository.com/artifact/io.confluent/kafka-schema-registry-maven-plugin
         <plugin>
-            <!-- https://mvnrepository.com/artifact/io.confluent/kafka-schema-registry-maven-plugin -->
-            <groupId>io.confluent</groupId>
-            <artifactId>kafka-schema-registry-maven-plugin</artifactId>
-            <version>6.1.0</version>
-            <configuration>
-                <schemaRegistryUrls>
-                    <param>http://schema-registry:8081</param>
-                </schemaRegistryUrls>
-                <subjects>
-                    <testtopic>src/main/avro/events-poc.avsc</testtopic>
-                    <othertopic>src/main/avro/events-poc.avsc</othertopic>
-                </subjects>
-                <schemaTypes>
-                    <testtopic>AVRO</testtopic>
-                    <othertopic>AVRO</othertopic>
-                </schemaTypes>
-            </configuration>
-            <goals>
-                <goal>test-compatibility</goal>
-            </goals>
-        </plugin>
+        <groupId>io.confluent</groupId>
+        <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+        <version>6.1.0</version>
+        <configuration>
+            <schemaRegistryUrls>
+                <param>http://schema-registry:8081</param>
+            </schemaRegistryUrls>
+            <subjects>
+                <testtopic>src/main/avro/events-poc.avsc</testtopic>
+                <othertopic>src/main/avro/events-poc.avsc</othertopic>
+            </subjects>
+            <schemaTypes>
+                <testtopic>AVRO</testtopic>
+                <othertopic>AVRO</othertopic>
+            </schemaTypes>
+        </configuration>
+        <goals>
+            <goal>test-compatibility</goal>
+        </goals>
+        </plugin> -->
     </plugins>
 </build>
 </project>

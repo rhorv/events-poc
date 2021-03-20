@@ -4,6 +4,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import events.IMessage;
+import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
 import events.formatter.formatterConstants;
 
@@ -11,6 +12,12 @@ import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
 public class Rjs1Serializer implements ISerializeMessage {
+
+  private IProvideSchema schemaProvider;
+
+  public Rjs1Serializer(IProvideSchema schemaProvider) {
+    this.schemaProvider = schemaProvider;
+  }
 
   @Override
   public String nameSerde() {
