@@ -5,32 +5,38 @@
                 http://www.springframework.org/schema/beans
                 http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <bean id="rjs1SchemaProvider" class="events.formatter.edaJsonSerDes.EDAJsonHardCodedSchemaProvider"/>
-  <bean id="rjs1Deserializer" class="events.formatter.edaJsonSerDes.Rjs1Deserializer">
-    <constructor-arg ref="rjs1SchemaProvider"/>
+  <bean id="edaJsonDeserializer" class="events.formatter.edaJsonSerDes.EdaJsonDeserializer">
+    <constructor-arg ref="edaHardCodedJsonSchemaProvider"/>
   </bean>
-  <bean id="rjs1Serializer" class="events.formatter.edaJsonSerDes.Rjs1Serializer">
-    <constructor-arg ref="schemaProvider"/>
-  </bean>
-  <bean id="decoratedRjs1Serializer" class="events.formatter.edaJsonSerDes.SerializedValidatorDecorator">
-    <constructor-arg ref="rjs1Serializer"/>
-    <constructor-arg ref="rjs1SchemaProvider"/>
+  <bean id="edaJsonSerializer" class="events.formatter.edaJsonSerDes.EdaJsonSerializer">
+    <constructor-arg ref="edaHardCodedJsonSchemaProvider"/>
   </bean>
 
-  <bean id="messageFamilyAwareDeserializer" class="events.formatter.MessageFamilyAwareDeserializer">
+  <bean id="edaDecoratedJsonSerializer" class="events.formatter.edaJsonSerDes.SerializedValidatorDecorator">
+    <constructor-arg ref="edaJsonSerializer"/>
+    <constructor-arg ref="edaHardCodedJsonSchemaProvider"/>
+  </bean>
+
+  <!-- For the avro deserialiser we are hard coding to use an avro file based specification for the schema provider
+       showing that the producer and consumer can operate differently. In this case the consumer is using a
+       specification it supports. A producer can move on to a new version without impacting a consumer as longs as
+       the AVRO schema is BACKWARD compatible.
+  -->
+  <bean id="edaAvroSerialiser" class="events.formatter.edaAvroSerDes.EdaAvroSerialiser">
+    <constructor-arg ref="schemaRegistry"/>
+  </bean>
+  <!-- For the avro deserialiser we are using the schema registry -->
+  <bean id="edaAvroDeserialiser" class="events.formatter.edaAvroSerDes.EdaAvroDeserialiser">
+    <constructor-arg ref="edaFileBasedAvroSchemaProvider"/>
+  </bean>
+
+  <bean id="edaMessageFamilyAwareDeserializer" class="events.formatter.MessageFamilyAwareDeserializer">
     <constructor-arg>
       <map>
-        <entry key="#{T(events.formatter.edaJsonSerDes.Rjs1Deserializer).NAME}" value-ref="rjs1Deserializer"/>
-        <entry key="#{T(events.formatter.hav1.Hav1Deserializer).NAME}" value-ref="hav1Deserializer"/>
+        <entry key="#{T(events.formatter.EdaFormatterConstants).EDA_JSON_GENERIC}" value-ref="edaJsonDeserializer"/>
+        <entry key="#{T(events.formatter.EdaFormatterConstants).EDA_AVRO_GENERIC}" value-ref="edaAvroDeserialiser"/>
       </map>
     </constructor-arg>
-  </bean>
-
-  <bean id="edaAvroGenericSerialiser" class="events.formatter.edaAvroSerDes.EdaAvroGenericSerialiser">
-    <constructor-arg ref="edaFileBasedSchemaProvider"/>
-  </bean>
-  <bean id="edaAvroGenericDeserialiser" class="events.formatter.edaAvroSerDes.EdaAvroGenericDeserialiser">
-    <constructor-arg ref="schemaProvider"/>
   </bean>
 
   <bean id="guavaDispatcher" class="events.dispatcher.guava.GuavaDispatcher">
@@ -48,7 +54,7 @@
     <constructor-arg ref="deserializer"/>
     <constructor-arg ref="dispatcher"/>
     <constructor-arg value="kafka:9092"/>
-    <constructor-arg value="testtopic"/>
+    <constructor-arg value="transactions"/>
   </bean>
   <bean id="rabbitConsumer" class="events.consumer.rabbitmq.RabbitMqConsumer">
     <constructor-arg ref="deserializer"/>
@@ -58,22 +64,22 @@
   </bean>
 
   <bean id="kafkaEventPublisher" class="events.publisher.kafka.KafkaTopicPublisher">
-    <constructor-arg ref="serializer"/>
+    <constructor-arg ref="edaAvroSerialiser"/>
     <constructor-arg value="kafka:9092"/>
-    <constructor-arg value="testtopic"/>
+    <constructor-arg value="transactions"/>
   </bean>
   <bean id="kafkaCommandPublisher" class="events.publisher.kafka.KafkaTopicPublisher">
-    <constructor-arg ref="serializer"/>
+    <constructor-arg ref="edaJsonSerializer"/>
     <constructor-arg value="kafka:9092"/>
-    <constructor-arg value="othertopic"/>
+    <constructor-arg value="transactions_handled"/>
   </bean>
   <bean id="rabbitEventPublisher" class="events.publisher.rabbitmq.RabbitMqPublisher">
-    <constructor-arg ref="serializer"/>
+    <constructor-arg ref="edaJsonSerializer"/>
     <constructor-arg ref="rabbitConnectionFactory"/>
     <constructor-arg value="events"/>
   </bean>
   <bean id="rabbitCommandPublisher" class="events.publisher.rabbitmq.RabbitMqPublisher">
-    <constructor-arg ref="serializer"/>
+    <constructor-arg ref="edaJsonSerializer"/>
     <constructor-arg ref="rabbitConnectionFactory"/>
     <constructor-arg value="commands"/>
   </bean>
@@ -93,14 +99,6 @@
       </map>
     </constructor-arg>
   </bean>
-  <bean id="splitDeserialiser" class="events.formatter.SplitDeserialiser">
-    <constructor-arg>
-      <map>
-        <entry key="edaAvroGenericEvent" value-ref="edaAvroGenericDeserialiser"/>
-        <entry key="rjs1GenericEvent" value-ref="rjs1Deserializer"/>
-      </map>
-    </constructor-arg>
-  </bean>
 
   <bean id="transactionChargeHandler" class="application.handler.TransactionChargeHandler">
     <constructor-arg ref="messagePublisher"/>
@@ -109,19 +107,30 @@
     <constructor-arg ref="messagePublisher"/>
   </bean>
 
-  <bean id="hardCodedSchemaProvider" class="events.formatter.edaJsonSerDes.EDAJsonHardCodedSchemaProvider"/>
-  <bean id="edaFileBasedSchemaProvider" class="events.formatter.edaAvroSerDes.EDAAvroFileBasedSchemaProvider"/>
+  <!-- Use this for schemaProvider as an alias when using JSON and a hard code JSON schema provider -->
+  <bean id="edaHardCodedJsonSchemaProvider" class="events.formatter.edaJsonSerDes.EdaJsonHardCodedSchemaProvider"/>
+  <!-- Use this for schemaProvider as an alias when using AVRO and a hard code AVRO schema provider -->
+  <bean id="edaFileBasedAvroSchemaProvider" class="events.formatter.edaAvroSerDes.EdaAvroFileBasedSchemaProvider"/>
+  <!-- Use this for schemaProvider as an alias when using a schema registry -->
   <bean id="schemaRegistry" class="events.formatter.SchemaRegistry"/>
 
-  <alias name="schemaRegistry" alias="schemaProvider"/>
-  <alias name="splitKafkaPublisher" alias="messagePublisher"/>
-  <alias name="kafkaConsumer" alias="messageConsumer"/>
+  <!--<alias name="schemaRegistry" alias="schemaProvider"/>-->
+  <!--<alias name="edaHardCodedJsonSchemaProvider" alias="schemaProvider"/>-->
+  <!--<alias name="edaFileBasedAvroSchemaProvider" alias="schemaProvider"/>-->
+
+  <!--<alias name="edaAvroSerialiser" alias="serializer"/>-->
+  <!--<alias name="edaJsonSerializer" alias="serializer"/>-->
+  <alias name="decoratedJsonSerializer" alias="serializer"/>
+
+  <!-- This deserialiser user the contents of the header to determine the appropriate deseriliser to use fo an eda event. -->
+  <alias name="edaMessageFamilyAwareDeserializer" alias="deserializer"/>
+
   <alias name="guavaDispatcher" alias="dispatcher"/>
-  <alias name="edaAvroGenericSerialiser" alias="serializer"/>
-  <alias name="messageFamilyAwareDeserializer" alias="deserializer"/>
-  <!--alias name="splitDeserialiser" alias="deserializer"/-->
-  <!--<alias name="rjs1Serializer" alias="serializer"/>-->
-  <!--  <alias name="decoratedRjs1Serializer" alias="deserializer"/>-->
-  <!--  <alias name="hav1Serializer" alias="serializer"/>-->
+
+  <!-- Chane the following to switch between Kafka and RabbitMQ -->
+  <alias name="splitRabbitPublisher" alias="messagePublisher"/>
+  <alias name="rabbitConsumer" alias="messageConsumer"/>
+  <!--<alias name="splitKafkaPublisher" alias="messagePublisher"/>-->
+  <!--<alias name="kafkaConsumer" alias="messageConsumer"/>-->
 
 </beans>

@@ -7,16 +7,16 @@ import events.IMessage;
 import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
-import events.formatter.EDAFormatterConstants;
+import events.formatter.EdaFormatterConstants;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Rjs1Serializer implements ISerializeMessage {
+public class EdaJsonSerializer implements ISerializeMessage {
   private IProvideSchema schemaProvider;
 
-  public Rjs1Serializer(IProvideSchema schemaProvider) {
+  public EdaJsonSerializer(IProvideSchema schemaProvider) {
     this.schemaProvider = schemaProvider;
   }
 
@@ -34,6 +34,6 @@ public class Rjs1Serializer implements ISerializeMessage {
         .create();
     String jsonString = gson.toJson(dto);
     Map<String, String> header = new HashMap<>();
-    return Envelope.v1(dto.id, EDAFormatterConstants.RSJ1, jsonString.getBytes());
+    return Envelope.v1(dto.id, EdaFormatterConstants.EDA_JSON_GENERIC, jsonString.getBytes());
   }
 }

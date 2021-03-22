@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class EDAAvroFileBasedSchemaProvider implements IProvideSchema {
+public class EdaAvroFileBasedSchemaProvider implements IProvideSchema {
     @Override
     public String get() {
         String schema = "";

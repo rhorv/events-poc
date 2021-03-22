@@ -3,7 +3,7 @@ package events.formatter;
 import javax.inject.Named;
 
 @Named
-public class EDAFormatterConstants {
+public class EdaFormatterConstants {
     public static final String EDA_AVRO_GENERIC = "edaAvroGenericEvent";
-    public static final String RSJ1 = "rjs1GenericEvent";
+    public static final String EDA_JSON_GENERIC = "edaJsonGenericEvent";
 }

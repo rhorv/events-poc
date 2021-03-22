@@ -16,13 +16,13 @@ import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class Rjs1SerializerTest {
+class EdaJsonSerializerTest {
 
-  private Rjs1Serializer serializer;
+  private EdaJsonSerializer serializer;
 
   @BeforeEach
   public void setUp() throws Exception {
-    this.serializer = new Rjs1Serializer(new EDAJsonHardCodedSchemaProvider());
+    this.serializer = new EdaJsonSerializer(new EdaJsonHardCodedSchemaProvider());
   }
 
   @Test

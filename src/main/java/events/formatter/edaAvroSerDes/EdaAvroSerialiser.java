@@ -4,7 +4,7 @@ import events.IMessage;
 import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
-import events.formatter.EDAFormatterConstants;
+import events.formatter.EdaFormatterConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
@@ -18,14 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class EdaAvroGenericSerialiser implements ISerializeMessage {
+public class EdaAvroSerialiser implements ISerializeMessage {
     private Schema.Parser parser;
     private Schema avroSchema;
     private GenericDatumWriter<GenericRecord> avroWriter;
     private EncoderFactory encoderFactory;
     private IProvideSchema schemaProvider;
 
-    public EdaAvroGenericSerialiser(IProvideSchema schemaProvider) throws IOException {
+    public EdaAvroSerialiser(IProvideSchema schemaProvider) throws IOException {
         this.schemaProvider = schemaProvider;
         this.parser = new Schema.Parser();
         this.avroSchema = parser.parse( schemaProvider.get() );
@@ -50,7 +50,7 @@ public class EdaAvroGenericSerialiser implements ISerializeMessage {
         avroEncoder.flush();
 
         Map<String, String> header = new HashMap<>();
-        return Envelope.v1(uuid.toString(), EDAFormatterConstants.EDA_AVRO_GENERIC, stream.toByteArray());
+        return Envelope.v1(uuid.toString(), EdaFormatterConstants.EDA_AVRO_GENERIC, stream.toByteArray());
     }
 
     public byte[] jsonToAvro(String json, Schema schema) throws IOException {

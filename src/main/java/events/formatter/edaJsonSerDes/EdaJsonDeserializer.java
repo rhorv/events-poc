@@ -15,11 +15,11 @@ import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public class Rjs1Deserializer implements IDeserializeMessage {
+public class EdaJsonDeserializer implements IDeserializeMessage {
 
   private IProvideSchema schemaProvider;
 
-  public Rjs1Deserializer(IProvideSchema schemaProvider) {
+  public EdaJsonDeserializer(IProvideSchema schemaProvider) {
     this.schemaProvider = schemaProvider;
   }
 

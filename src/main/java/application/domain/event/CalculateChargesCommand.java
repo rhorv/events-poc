@@ -13,6 +13,8 @@ public class CalculateChargesCommand extends Command implements IMessage {
   private DateTime occurredAt;
 
   public CalculateChargesCommand(String transactionId) {
+    // this.transactionId = UUID.randomUUID().toString();
+    // this.consequenceOf = transactionId;
     this.transactionId = transactionId;
     this.occurredAt = new DateTime();
   }

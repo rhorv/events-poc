@@ -2,7 +2,7 @@ package events.formatter.edaJsonSerDes;
 
 import events.formatter.IProvideSchema;
 
-public class EDAJsonHardCodedSchemaProvider implements IProvideSchema {
+public class EdaJsonHardCodedSchemaProvider implements IProvideSchema {
 
   public String get() {
     return "{\n"

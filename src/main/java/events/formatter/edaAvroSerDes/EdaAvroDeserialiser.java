@@ -19,7 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Map;
 
-public class EdaAvroGenericDeserialiser implements IDeserializeMessage {
+public class EdaAvroDeserialiser implements IDeserializeMessage {
     private Schema.Parser parser;
     private Schema avroSchema;
     private GenericRecord avroRecord;
@@ -27,7 +27,7 @@ public class EdaAvroGenericDeserialiser implements IDeserializeMessage {
     private DecoderFactory decoderFactory;
     private IProvideSchema schemaProvider;
 
-    public EdaAvroGenericDeserialiser(IProvideSchema schemaProvider) throws IOException {
+    public EdaAvroDeserialiser(IProvideSchema schemaProvider) throws IOException {
         this.schemaProvider = schemaProvider;
         this.parser = new Schema.Parser();
         this.avroSchema = parser.parse( schemaProvider.get() );

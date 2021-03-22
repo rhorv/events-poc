@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import events.IMessage;
-import events.formatter.EDAFormatterConstants;
+import events.formatter.EdaFormatterConstants;
 import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import java.nio.charset.StandardCharsets;
@@ -18,15 +18,15 @@ import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class Rjs1DeserializerTest {
+class EdaJsonDeserializerTest {
 
-  private Rjs1Deserializer deserializer;
+  private EdaJsonDeserializer deserializer;
   private IProvideSchema provider;
 
   @BeforeEach
   public void setUp() throws Exception {
     this.provider = mock(IProvideSchema.class);
-    this.deserializer = new Rjs1Deserializer(this.provider);
+    this.deserializer = new EdaJsonDeserializer(this.provider);
   }
 
   @Test
@@ -37,7 +37,7 @@ class Rjs1DeserializerTest {
         Exception.class,
         () -> {
           this.deserializer.deserialize(
-              Envelope.v1(UUID.randomUUID().toString(), EDAFormatterConstants.RSJ1,
+              Envelope.v1(UUID.randomUUID().toString(), EdaFormatterConstants.EDA_JSON_GENERIC,
                   invalidJson.getBytes(StandardCharsets.UTF_8)));
         });
   }
@@ -61,7 +61,7 @@ class Rjs1DeserializerTest {
         Exception.class,
         () -> {
           this.deserializer.deserialize(
-              Envelope.v1(UUID.randomUUID().toString(), EDAFormatterConstants.RSJ1,
+              Envelope.v1(UUID.randomUUID().toString(), EdaFormatterConstants.EDA_JSON_GENERIC,
                   nonCompliantJson.getBytes(StandardCharsets.UTF_8)));
         });
   }
@@ -86,11 +86,11 @@ class Rjs1DeserializerTest {
   void testItDeserializesCorrectlyIntoAMessageForValidJson() throws Exception {
     String validJson =
         "{\"id\": \"622178f0-7dc8-41b6-88a9-2ce0f0934066\",\"name\": \"event_name\",\"category\": \"event\",\"payload\": {\"field\": \"value\"},\"occurred_at\": \"2020-09-15T15:53:00+01:00\",\"version\": 1}";
-    when(this.provider.get()).thenReturn(new EDAJsonHardCodedSchemaProvider().get());
+    when(this.provider.get()).thenReturn(new EdaJsonHardCodedSchemaProvider().get());
 
     IMessage message =
         this.deserializer.deserialize(
-            Envelope.v1(UUID.randomUUID().toString(), EDAFormatterConstants.RSJ1,
+            Envelope.v1(UUID.randomUUID().toString(), EdaFormatterConstants.EDA_JSON_GENERIC,
                 validJson.getBytes(StandardCharsets.UTF_8)));
     assertEquals(message.getName(), "event_name");
     assertEquals(message.getCategory(), "event");
