@@ -1,11 +1,12 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import events.IMessage;
 import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
-import java.io.ByteArrayOutputStream;
+
 import java.nio.charset.StandardCharsets;
+
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;

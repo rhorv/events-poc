@@ -28,7 +28,7 @@ class CalculateChargesCommandTest {
 
   @Test
   void testItFailsToCreateOnInCompatibleMessageName() {
-    IMessage message = new Message("event_name", this.validPayload, 1,
+    IMessage message = new Message("event_name", this.validPayload.get("transactionId"), this.validPayload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     assertThrows(Exception.class, () -> {
       CalculateChargesCommand.fromMessage(message);
@@ -37,7 +37,7 @@ class CalculateChargesCommandTest {
 
   @Test
   void testItFailsToCreateOnInCompatiblePayload() {
-    IMessage message = new Message(CalculateChargesCommand.NAME, this.invalidPayload, 1,
+    IMessage message = new Message(CalculateChargesCommand.NAME, UUID.randomUUID().toString(), this.invalidPayload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     assertThrows(Exception.class, () -> {
       TransactionClearedEvent.fromMessage(message);
@@ -46,10 +46,10 @@ class CalculateChargesCommandTest {
 
   @Test
   void testItSucceedsInCreatingTheEventOnCompatibleMessage() throws Exception {
-    IMessage message = new Message(CalculateChargesCommand.NAME, this.validPayload, 1,
+    IMessage message = new Message(CalculateChargesCommand.NAME, this.validPayload.get("transactionId"), this.validPayload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     CalculateChargesCommand event = CalculateChargesCommand.fromMessage(message);
     assertEquals(event.getName(), CalculateChargesCommand.NAME);
-    assertEquals(event.getTransactionId().toString(), this.validPayload.get("transactionId"));
+    assertEquals(event.getEventId().toString(), this.validPayload.get("transactionId"));
   }
 }

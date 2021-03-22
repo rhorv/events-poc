@@ -7,6 +7,8 @@ public interface IMessage {
 
   public String getName();
 
+  public String getEventId();
+
   public Map<String, String> getPayload();
 
   public Integer getVersion();

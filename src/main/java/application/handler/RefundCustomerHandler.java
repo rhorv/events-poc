@@ -19,7 +19,7 @@ public class RefundCustomerHandler implements IHandle {
         "[x] Handled: "
             + event.getName()
             + " transaction id:"
-            + event.getTransactionId().toString()
+            + event.getEventId().toString()
             + " Incoming message version: "
             + message.getVersion()
             + " Own message version: "

@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.edaJsonSerDes;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -15,12 +15,11 @@ import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public class Rjs1Deserializer implements IDeserializeMessage {
+public class EdaJsonDeserializer implements IDeserializeMessage {
 
   private IProvideSchema schemaProvider;
-  public static final String NAME = "rjs1";
 
-  public Rjs1Deserializer(IProvideSchema schemaProvider) {
+  public EdaJsonDeserializer(IProvideSchema schemaProvider) {
     this.schemaProvider = schemaProvider;
   }
 
@@ -43,6 +42,6 @@ public class Rjs1Deserializer implements IDeserializeMessage {
     GsonClassDto dto = gson.fromJson(messageBody, GsonClassDto.class);
 
     return new Message(
-        dto.name, dto.payload, dto.version, new DateTime(dto.occurredAt), dto.category);
+        dto.name, dto.payload.get("transactionId"), dto.payload, dto.version, new DateTime(dto.occurredAt), dto.category);
   }
 }

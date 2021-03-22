@@ -40,11 +40,11 @@ public class Example2 {
 
     try {
       publisher.publish(
-          new Message("transaction_cancelled", v1payload, 1, new DateTime(), "event"));
+          new Message("transaction_cancelled", v1payload.get("transactionId"), v1payload, 1, new DateTime(), "event"));
       publisher.publish(
-          new Message("transaction_cancelled", v2payload, 2, new DateTime(), "event"));
+          new Message("transaction_cancelled", v2payload.get("transactionId"), v2payload, 2, new DateTime(), "event"));
       publisher.publish(
-          new Message("transaction_cancelled", v3payload, 3, new DateTime(), "event"));
+          new Message("transaction_cancelled", v3payload.get("transactionId"), v3payload, 3, new DateTime(), "event"));
     } catch (Exception e) {
       e.printStackTrace();
     }

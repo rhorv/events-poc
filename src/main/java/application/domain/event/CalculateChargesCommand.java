@@ -9,16 +9,14 @@ import org.joda.time.DateTime;
 public class CalculateChargesCommand extends Command implements IMessage {
 
   public static final String NAME = "calculate_charges";
-  private UUID transactionId;
+  private String transactionId;
   private DateTime occurredAt;
 
-  public CalculateChargesCommand(UUID transactionId) {
+  public CalculateChargesCommand(String transactionId) {
+    // this.transactionId = UUID.randomUUID().toString();
+    // this.consequenceOf = transactionId;
     this.transactionId = transactionId;
     this.occurredAt = new DateTime();
-  }
-
-  public UUID getTransactionId() {
-    return transactionId;
   }
 
   public Map<String, String> getPayload() {
@@ -32,13 +30,15 @@ public class CalculateChargesCommand extends Command implements IMessage {
       throw new RuntimeException();
     }
     Map<String, String> payload = message.getPayload();
-    return new CalculateChargesCommand(
-        UUID.fromString(payload.get("transactionId"))
-    );
+    return new CalculateChargesCommand(payload.get("transactionId"));
   }
 
   public String getName() {
     return NAME;
+  }
+
+  public String getEventId() {
+    return transactionId;
   }
 
   public DateTime getOccurredAt() {

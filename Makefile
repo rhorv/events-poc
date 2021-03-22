@@ -38,8 +38,9 @@ rabbitmq-setup: ## Initializes the rabbitmq queues and exchanges
 	docker exec -it rabbitmq rabbitmqadmin --username admin --password admin123 declare binding source=commands destination=logging destination_type=queue
 
 kafka-setup: ## Initializes the kafka topics
-	docker exec -it kafka /bin/bash /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic testtopic --bootstrap-server localhost:9092
-	docker exec -it kafka /bin/bash /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic othertopic --bootstrap-server localhost:9092
+	docker exec -it kafka /bin/bash /usr/bin/kafka-topics --create --if-not-exists --topic transactions --bootstrap-server localhost:9092
+	docker exec -it kafka /bin/bash /usr/bin/kafka-topics --create --if-not-exists --topic transactions_handled --bootstrap-server localhost:9092
+	./src/main/resources/loadAvroSchemaToRegistry.sh -f ./src/main/avro/events-poc.avsc -s edaAvroGenericEvent
 
 rabbitmq-start: ## Starts the rabbitmq docker service
 	@export PWD=`pwd`

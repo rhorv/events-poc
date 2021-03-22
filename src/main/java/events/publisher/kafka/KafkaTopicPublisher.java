@@ -5,6 +5,7 @@ import events.formatter.Envelope;
 import events.formatter.ISerializeMessage;
 import events.publisher.IPublish;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -29,10 +30,8 @@ public class KafkaTopicPublisher implements IPublish {
     Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
     props.put(ProducerConfig.CLIENT_ID_CONFIG, "KafkaExampleProducer");
-    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-        "org.apache.kafka.common.serialization.LongSerializer");
-    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-        "org.apache.kafka.common.serialization.ByteArraySerializer");
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.LongSerializer");
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.ByteArraySerializer");
     return new KafkaProducer<>(props);
   }
 
@@ -44,9 +43,7 @@ public class KafkaTopicPublisher implements IPublish {
     try {
       for (long index = time; index < time + 1; index++) {
         Envelope envelope = this.formatter.serialize(message);
-        final ProducerRecord<Long, byte[]> record =
-            new ProducerRecord<>(
-                this.topicName, index, envelope.getBody());
+        final ProducerRecord<Long, byte[]> record = new ProducerRecord<>(this.topicName, index, envelope.getBody());
         for (Map.Entry<String, String> entry : envelope.getHeader().entrySet()) {
           record.headers().add(entry.getKey(), entry.getValue().getBytes(StandardCharsets.UTF_8));
         }
@@ -55,9 +52,8 @@ public class KafkaTopicPublisher implements IPublish {
 
         long elapsedTime = System.currentTimeMillis() - time;
         System.out.printf(
-            "[x] sent record(key=%s value=%s) " + "meta(partition=%d, offset=%d) time=%d\n",
-            record.key(), record.value().toString(), metadata.partition(), metadata.offset(),
-            elapsedTime);
+            "[x] sent \"meta(partition=%d, offset=%d, time=%d)\\n\" + record(key=%s value=%s) \n",
+                metadata.partition(), metadata.offset(), elapsedTime, record.key(), Arrays.toString(envelope.getBody()));
       }
     } finally {
       producer.flush();

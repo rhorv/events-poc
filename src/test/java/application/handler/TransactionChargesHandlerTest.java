@@ -40,7 +40,7 @@ class TransactionChargesHandlerTest {
 
   @Test
   void testItThrowsOnNotCompatibleMessage() {
-    IMessage message = new Message("event_name", new HashMap<String, String>(), 1,
+    IMessage message = new Message("event_name", UUID.randomUUID().toString(), new HashMap<String, String>(), 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     assertThrows(Exception.class, () -> {
       this.handler.handle(message);

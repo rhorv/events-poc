@@ -55,7 +55,7 @@ If you have that you can run ``make check-deps`` for a rudementary dependency ch
 This will check for things you need (not for specific versions though just yet)
 
 You will definitely need the following things:
-- java 8 (tested with openJDK version 1.8.0_282)
+- java 11 (openjdk version "11.0.10" 2021-01-19)
 - docker (tested with 12.03.13)
 - docker-compose (tested with 1.25.0)
 - maven (tested with 3.6.3)
@@ -114,7 +114,7 @@ There are 2 ways of running the code, by hand/from your IDE, or as a docker cont
 
 ### Running the code by hand
 
-After building the project, you should be able to run the main application by running ``java -jar target/gs-maven-0.1.0.jar``
+After building the project, you should be able to run the main application by running ``java -jar target/eda-poc-0.1.0.jar``
 This will start the currently configured consumer
 
 ### Running the code from your IDE
@@ -122,7 +122,10 @@ This will start the currently configured consumer
 1. Set the project up in your favorite IDE
 2. Make sure you define these in your ``/etc/hosts``:  
 ``127.0.0.1 kafka``  
-``127.0.0.1 rabbitmq``  
+``127.0.0.1 rabbitmq``</br>
+``127.0.0.1 schema-registry``</br>
+   ``127.0.0.1       control-center``
+   
 3. Click run in your IDE
 
 You can run 3 scripts this way, "MyApplication" will run the consumer (whichever one is configured in the container).   
@@ -149,14 +152,14 @@ What exactly happens depends on which consumer is configured, it's a difference 
 
 __Kafka__:
  
----publish transaction_cleared event to---> (T)testtopic   
+---publish transaction_cleared event to---> (T)transactions   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;---consumed by---> MyApplication   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;---publish calculate_charges to---> (T)othertopic   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;---publish calculate_charges to---> (T)transactions_handled   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;---> END 
 
 (T): Topic
 
-Both "testtopic" and "othertopic" is also consumed by elk
+Both "transactions" and "transactions_handled" is also consumed by elk
 
 __RabbitMQ__:
 
@@ -203,8 +206,27 @@ while serialization remains controlled by the DI container configuration (as exp
 In order to change between publish formats, just alias your preferred serializer as "serializer"  
 (both are provided in the applicationContext.xml - one commented and one active)
 
-rjs1:  
-``<alias name="decoratedRjs1Serializer" alias="serializer"/>``  
+Json:  
+``<alias name="decoratedJsonSerializer" alias="serializer"/>``  
+``<alias name="edaJsonSerializer" alias="serializer"/>``
 
-hav1:  
-``<alias name="hav1Serializer" alias="serializer"/>``  
+Avro:  
+``<alias name="edaAvroSerialiser" alias="serializer"/>``
+
+## Schema Providers
+
+A number of different schema providers are showcased in this POC including schema registry using
+confluent.
+
+At present for Json based schemas this POC provides only a hardcoded provider, this can in 
+future be extended to put the schema in schema registry which supports AVRO, JSON and PROTOBUF.
+To use the json based schema provider use the following alias
+
+  <alias name="schemaRegistry" alias="schemaProvider"/>
+
+With regard to Avro this POC can be configured to use schema registry, a hard coded AVRO schema, 
+or an AVRO schema defined in a file using the following aliases for schemaProvider.
+
+  <alias name="schemaRegistry" alias="schemaProvider"/>
+  <alias name="edaHardCodedJsonSchemaProvider" alias="schemaProvider"/>
+  <alias name="edaFileBasedAvroSchemaProvider" alias="schemaProvider"/>

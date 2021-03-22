@@ -30,7 +30,7 @@ class TransactionClearedEventTest {
 
   @Test
   void testItFailsToCreateOnInCompatibleMessageName() {
-    IMessage message = new Message("event_name", this.validPayload, 1,
+    IMessage message = new Message("event_name", this.validPayload.get("transactionId"), this.validPayload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     assertThrows(Exception.class, () -> {
       TransactionClearedEvent.fromMessage(message);
@@ -39,7 +39,7 @@ class TransactionClearedEventTest {
 
   @Test
   void testItFailsToCreateOnInCompatiblePayload() {
-    IMessage message = new Message(TransactionClearedEvent.NAME, this.invalidPayload, 1,
+    IMessage message = new Message(TransactionClearedEvent.NAME, UUID.randomUUID().toString(), this.invalidPayload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     assertThrows(Exception.class, () -> {
       TransactionClearedEvent.fromMessage(message);
@@ -48,11 +48,11 @@ class TransactionClearedEventTest {
 
   @Test
   void testItSucceedsInCreatingTheEventOnCompatibleMessage() throws Exception {
-    IMessage message = new Message(TransactionClearedEvent.NAME, this.validPayload, 1,
+    IMessage message = new Message(TransactionClearedEvent.NAME, this.validPayload.get("transactionId"), this.validPayload, 1,
         new DateTime("2020-09-15T15:53:00+01:00"), "event");
     TransactionClearedEvent event = TransactionClearedEvent.fromMessage(message);
     assertEquals(event.getName(), TransactionClearedEvent.NAME);
-    assertEquals(event.getTransactionId().toString(), this.validPayload.get("transactionId"));
+    assertEquals(event.getEventId().toString(), this.validPayload.get("transactionId"));
     assertEquals(event.getInterchangeFee().getAmount(),
         Integer.valueOf(this.validPayload.get("interchangeFeeAmount")));
     assertEquals(event.getInterchangeFee().getCurrency().toString(),
