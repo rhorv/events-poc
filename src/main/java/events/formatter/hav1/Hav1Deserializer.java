@@ -35,7 +35,9 @@ public class Hav1Deserializer implements IDeserializeMessage {
 
     Parser parser = new Parser();
     Schema avroSchema = parser.parse(this.schemaProvider.get());
-    GenericRecord record = avroToRecord(envelope.getBody(), avroSchema);
+    DatumReader<GenericRecord> reader = new GenericDatumReader<GenericRecord>(avroSchema);
+    Decoder decoder = DecoderFactory.get().binaryDecoder(envelope.getBody(), null);
+    GenericRecord record = reader.read(null, decoder);
 
     Map<String, String> payload = new HashMap<>();
     for (Map.Entry<Utf8, Utf8> entry : ((Map<Utf8, Utf8>) record.get("payload")).entrySet()) {
@@ -49,11 +51,4 @@ public class Hav1Deserializer implements IDeserializeMessage {
         new DateTime(record.get("occurred_at").toString()),
         record.get("category").toString());
   }
-
-  public GenericRecord avroToRecord(byte[] data, Schema schema) throws IOException {
-    DatumReader<GenericRecord> reader = new GenericDatumReader<GenericRecord>(schema);
-    Decoder decoder = DecoderFactory.get().binaryDecoder(data, null);
-    return reader.read(null, decoder);
-  }
-
 }
