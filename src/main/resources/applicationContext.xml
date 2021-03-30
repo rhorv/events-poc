@@ -5,29 +5,53 @@
                 http://www.springframework.org/schema/beans
                 http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <bean id="rjs1SchemaProvider" class="events.formatter.rjs1.HardCodedSchemaProvider"/>
-  <bean id="rjs1Deserializer" class="events.formatter.rjs1.Rjs1Deserializer">
+  <bean id="rjs1SchemaRegistryProvider" class="events.formatter.schemaprovider.ConfluentSchemaRegistryBasedSchemaProvider">
+    <constructor-arg value="http://localhost:8081" />
+    <constructor-arg value="generic" />
+    <constructor-arg value="#{T(events.formatter.family.rjs1.Rjs1Deserializer).NAME}" />
+    <constructor-arg value="true" />
+  </bean>
+
+  <bean id="rjs1SchemaFileProvider" class="events.formatter.schemaprovider.FileBasedSchemaProvider">
+    <constructor-arg value="src/main/resources/schema/rjs1/generic.json" />
+    <constructor-arg><map/></constructor-arg>
+    <constructor-arg value="true" />
+  </bean>
+
+  <bean id="hav1SchemaFileProvider" class="events.formatter.schemaprovider.FileBasedSchemaProvider">
+    <constructor-arg value="src/main/resources/schema/hav1/generic.avsc" />
+    <constructor-arg><map/></constructor-arg>
+    <constructor-arg value="true" />
+  </bean>
+
+  <bean id="hav1SchemaRegistryProvider" class="events.formatter.schemaprovider.ConfluentSchemaRegistryBasedSchemaProvider">
+    <constructor-arg value="http://localhost:8081" />
+    <constructor-arg value="generic" />
+    <constructor-arg value="#{T(events.formatter.family.hav1.Hav1Deserializer).NAME}" />
+    <constructor-arg value="true" />
+  </bean>
+
+  <bean id="rjs1Deserializer" class="events.formatter.family.rjs1.Rjs1Deserializer">
     <constructor-arg ref="rjs1SchemaProvider"/>
   </bean>
 
-  <bean id="rjs1Serializer" class="events.formatter.rjs1.Rjs1Serializer"/>
-  <bean id="decoratedRjs1Serializer" class="events.formatter.rjs1.SerializedValidatorDecorator">
+  <bean id="rjs1Serializer" class="events.formatter.family.rjs1.Rjs1Serializer"/>
+  <bean id="decoratedRjs1Serializer" class="events.formatter.family.rjs1.SerializedValidatorDecorator">
     <constructor-arg ref="rjs1Serializer"/>
     <constructor-arg ref="rjs1SchemaProvider"/>
   </bean>
 
-  <bean id="hav1SchemaProvider" class="events.formatter.hav1.HardCodedSchemaProvider"/>
-  <bean id="hav1Serializer" class="events.formatter.hav1.Hav1Serializer">
+  <bean id="hav1Serializer" class="events.formatter.family.hav1.Hav1Serializer">
     <constructor-arg ref="hav1SchemaProvider"/>
   </bean>
-  <bean id="hav1Deserializer" class="events.formatter.hav1.Hav1Deserializer">
+  <bean id="hav1Deserializer" class="events.formatter.family.hav1.Hav1Deserializer">
     <constructor-arg ref="hav1SchemaProvider"/>
   </bean>
   <bean id="messageFamilyAwareDeserializer" class="events.formatter.MessageFamilyAwareDeserializer">
     <constructor-arg>
       <map>
-        <entry key="#{T(events.formatter.rjs1.Rjs1Deserializer).NAME}" value-ref="rjs1Deserializer"/>
-        <entry key="#{T(events.formatter.hav1.Hav1Deserializer).NAME}" value-ref="hav1Deserializer"/>
+        <entry key="#{T(events.formatter.family.rjs1.Rjs1Deserializer).NAME}" value-ref="rjs1Deserializer"/>
+        <entry key="#{T(events.formatter.family.hav1.Hav1Deserializer).NAME}" value-ref="hav1Deserializer"/>
       </map>
     </constructor-arg>
   </bean>
@@ -100,12 +124,17 @@
     <constructor-arg ref="messagePublisher"/>
   </bean>
 
-  <alias name="splitRabbitPublisher" alias="messagePublisher"/>
-  <alias name="rabbitConsumer" alias="messageConsumer"/>
+  <alias name="splitKafkaPublisher" alias="messagePublisher"/>
+  <alias name="kafkaConsumer" alias="messageConsumer"/>
   <alias name="guavaDispatcher" alias="dispatcher"/>
-  <alias name="decoratedRjs1Serializer" alias="serializer"/>
+<!--  <alias name="decoratedRjs1Serializer" alias="serializer"/>-->
   <alias name="messageFamilyAwareDeserializer" alias="deserializer"/>
 
-<!--  <alias name="hav1Serializer" alias="serializer"/>-->
+  <alias name="hav1Serializer" alias="serializer"/>
 
+  <alias name="rjs1SchemaRegistryProvider" alias="rjs1SchemaProvider"/>
+  <alias name="hav1SchemaRegistryProvider" alias="hav1SchemaProvider"/>
+
+<!--  <alias name="rjs1SchemaFileProvider" alias="rjs1SchemaProvider"/>-->
+<!--  <alias name="hav1SchemaFileProvider" alias="hav1SchemaProvider"/>-->
 </beans>

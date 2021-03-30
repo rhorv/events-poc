@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import org.apache.commons.io.IOUtils;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -65,10 +66,11 @@ public class KafkaTopicConsumer implements IConsume {
 
       consumerRecords.forEach(
           record -> {
-            System.out.printf(
-                "[x] Consumer Record:(%d, %s, %d, %d)\n",
-                record.key(), record.value(), record.partition(), record.offset());
             try {
+              System.out.printf(
+                  "[x] Consumer Record:(%d, %s, %d, %d)\n",
+                  record.key(), IOUtils.toString(record.value()), record.partition(),
+                  record.offset());
               Map<String, String> headers = new HashMap<>();
               for (Header header : record.headers().toArray()) {
                 headers.put(header.key(), new String(header.value()));

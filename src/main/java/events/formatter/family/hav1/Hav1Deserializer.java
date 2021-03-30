@@ -1,11 +1,10 @@
-package events.formatter.hav1;
+package events.formatter.family.hav1;
 
 import events.IMessage;
 import events.Message;
 import events.formatter.Envelope;
 import events.formatter.IDeserializeMessage;
 import events.formatter.IProvideSchema;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.avro.Schema;
@@ -34,7 +33,7 @@ public class Hav1Deserializer implements IDeserializeMessage {
     }
 
     Parser parser = new Parser();
-    Schema avroSchema = parser.parse(this.schemaProvider.get());
+    Schema avroSchema = parser.parse(this.schemaProvider.getGenericSchema());
     DatumReader<GenericRecord> reader = new GenericDatumReader<GenericRecord>(avroSchema);
     Decoder decoder = DecoderFactory.get().binaryDecoder(envelope.getBody(), null);
     GenericRecord record = reader.read(null, decoder);
@@ -48,7 +47,7 @@ public class Hav1Deserializer implements IDeserializeMessage {
         record.get("name").toString(),
         payload,
         Integer.valueOf(record.get("version").toString()),
-        new DateTime(record.get("occurred_at").toString()),
+        new DateTime(record.get("occurredAt").toString()),
         record.get("category").toString());
   }
 }

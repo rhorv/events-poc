@@ -1,10 +1,9 @@
-package events.formatter.rjs1;
+package events.formatter.family.rjs1;
 
 import events.IMessage;
 import events.formatter.Envelope;
 import events.formatter.IProvideSchema;
 import events.formatter.ISerializeMessage;
-import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -25,7 +24,7 @@ public class SerializedValidatorDecorator implements ISerializeMessage {
   public Envelope serialize(IMessage message) throws Exception {
     Envelope output = this.messageSerializer.serialize(message);
 
-    JSONObject rawSchema = new JSONObject(new JSONTokener(this.schemaProvider.get()));
+    JSONObject rawSchema = new JSONObject(new JSONTokener(this.schemaProvider.getGenericSchema()));
     Schema schema = SchemaLoader.load(rawSchema);
     schema.validate(
         new JSONObject(

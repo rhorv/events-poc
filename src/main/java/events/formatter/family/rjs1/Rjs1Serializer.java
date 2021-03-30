@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.family.rjs1;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import events.IMessage;
 import events.formatter.Envelope;
 import events.formatter.ISerializeMessage;
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -28,7 +27,6 @@ public class Rjs1Serializer implements ISerializeMessage {
     Gson gson = builder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .create();
     String jsonString = gson.toJson(dto);
-    Map<String, String> header = new HashMap<>();
     return Envelope.v1(dto.id, NAME, jsonString.getBytes());
   }
 }

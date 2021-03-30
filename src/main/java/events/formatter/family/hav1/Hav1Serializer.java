@@ -1,4 +1,4 @@
-package events.formatter.hav1;
+package events.formatter.family.hav1;
 
 import events.IMessage;
 import events.formatter.Envelope;
@@ -27,13 +27,13 @@ public class Hav1Serializer implements ISerializeMessage {
 
     String id = UUID.randomUUID().toString();
     Parser parser = new Parser();
-    Schema avroSchema = parser.parse(this.schemaProvider.get());
+    Schema avroSchema = parser.parse(this.schemaProvider.getGenericSchema());
 
     GenericRecord avroRecord = new Record(avroSchema);
     avroRecord.put("id", id);
     avroRecord.put("name", message.getName());
     avroRecord.put("category", message.getCategory());
-    avroRecord.put("occurred_at", message.getOccurredAt().toString());
+    avroRecord.put("occurredAt", message.getOccurredAt().toString());
     avroRecord.put("version", message.getVersion());
     avroRecord.put("payload", message.getPayload());
 

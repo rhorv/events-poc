@@ -1,6 +1,7 @@
 docker/*/.env
 .idea
 target
+codemr
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

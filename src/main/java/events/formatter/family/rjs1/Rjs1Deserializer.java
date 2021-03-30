@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.family.rjs1;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -31,11 +31,10 @@ public class Rjs1Deserializer implements IDeserializeMessage {
     }
 
     String messageBody = new String(envelope.getBody(), StandardCharsets.UTF_8);
-    JSONObject rawSchema = new JSONObject(new JSONTokener(this.schemaProvider.get()));
+    JSONObject rawSchema = new JSONObject(new JSONTokener(this.schemaProvider.getGenericSchema()));
     Schema schema = SchemaLoader.load(rawSchema);
     schema.validate(
-        new JSONObject(
-            messageBody)); // throws a ValidationException if this object is invalid
+        new JSONObject(messageBody)); // throws a ValidationException if this object is invalid
 
     GsonBuilder builder = new GsonBuilder();
     Gson gson =

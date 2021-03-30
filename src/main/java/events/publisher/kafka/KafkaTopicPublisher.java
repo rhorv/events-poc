@@ -7,6 +7,7 @@ import events.publisher.IPublish;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Properties;
+import org.apache.commons.io.IOUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -56,7 +57,7 @@ public class KafkaTopicPublisher implements IPublish {
         long elapsedTime = System.currentTimeMillis() - time;
         System.out.printf(
             "[x] sent record(key=%s value=%s) " + "meta(partition=%d, offset=%d) time=%d\n",
-            record.key(), record.value().toString(), metadata.partition(), metadata.offset(),
+            record.key(), IOUtils.toString(record.value()), metadata.partition(), metadata.offset(),
             elapsedTime);
       }
     } finally {

@@ -19,6 +19,9 @@ check-deps: ## Checks the required dependecies
 	@printf "checking for docker permissions ... ";
 	@if [ "`docker ps | grep 'CONTAINER'`" != "" ]; then echo "pass"; else echo "fail"; fi
 
+	@printf "checking for jq ... ";
+	@if [ "`which jq`" != "" ]; then echo "found"; else echo "missing"; fi
+
 init: docker-init ## Initializes the project
 
 docker-init: ## Initializes the docker network adapter and creates required directories
@@ -40,6 +43,20 @@ rabbitmq-setup: ## Initializes the rabbitmq queues and exchanges
 kafka-setup: ## Initializes the kafka topics
 	docker exec -it kafka /bin/bash /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic testtopic --bootstrap-server localhost:9092
 	docker exec -it kafka /bin/bash /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic othertopic --bootstrap-server localhost:9092
+
+confluent-schema-registry-setup: ## Initializes the confluent schema registry
+	@jq '. | {"schemaType": "JSON", "schema": tojson}' src/main/resources/schema/rjs1/generic.json  | curl -X POST http://localhost:8081/subjects/rjs1-generic/versions -H "Content-Type: application/vnd.schemaregistry.v1+json" -d @-
+	@jq '. | {"schemaType": "AVRO", "schema": tojson}' src/main/resources/schema/hav1/generic.avsc  | curl -X POST http://localhost:8081/subjects/hav1-generic/versions -H "Content-Type: application/vnd.schemaregistry.v1+json" -d @-
+
+confluent-schema-registry-start: ## Starts the confluent schema registry docker service
+	@export PWD=`pwd`
+	@cd ${PWD}/docker/confluent-schema-registry; docker-compose up -d
+	@cd ${PWD}
+
+confluent-schema-registry-stop: ## Stops the confluent schema registry docker service
+	@export PWD=`pwd`
+	@cd ${PWD}/docker/confluent-schema-registry; docker-compose down
+	@cd ${PWD}
 
 rabbitmq-start: ## Starts the rabbitmq docker service
 	@export PWD=`pwd`
@@ -71,9 +88,9 @@ elk-stop: ## Stops the ELK stack docker service
 	@cd ${PWD}/docker/elk; docker-compose down;
 	@cd ${PWD}
 
-start-services: rabbitmq-start kafka-start elk-start ## Starts all dockerized services
+start-services: rabbitmq-start kafka-start elk-start confluent-schema-registry-start ## Starts all dockerized services
 
-stop-services: elk-stop kafka-stop rabbitmq-stop ## Stops all dockerized services
+stop-services: confluent-schema-registry-stop elk-stop kafka-stop rabbitmq-stop ## Stops all dockerized services
 
 test: ## Runs the tests
 	mvn test

@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.family.rjs1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

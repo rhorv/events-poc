@@ -1,4 +1,4 @@
-package events.formatter.rjs1;
+package events.formatter.family.rjs1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,7 +32,7 @@ class SerializedValidatorDecoratorTest {
 
   @Test
   void testItThrowsOnNonSchemaCompliantJson() throws Exception {
-    when(this.provider.get()).thenReturn("{\n" +
+    when(this.provider.getGenericSchema()).thenReturn("{\n" +
         "  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n" +
         "  \"type\": \"object\",\n" +
         "  \"properties\": {\n" +
@@ -56,7 +56,7 @@ class SerializedValidatorDecoratorTest {
 
   @Test
   void testItThrowsOnInvalidJson() throws Exception {
-    when(this.provider.get()).thenReturn("{}");
+    when(this.provider.getGenericSchema()).thenReturn("{}");
 
     IMessage message = new Message("name", new HashMap<String, String>(), 1, new DateTime(),
         "event");
@@ -72,7 +72,7 @@ class SerializedValidatorDecoratorTest {
   @Test
   void testItReturnsTheOriginalEnvelopeIfItMatchesTheSchemaForTheBody() throws Exception {
     String json = "{ \"somefield\": \"somevalue\" }";
-    when(this.provider.get()).thenReturn("{\n" +
+    when(this.provider.getGenericSchema()).thenReturn("{\n" +
         "  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n" +
         "  \"type\": \"object\",\n" +
         "  \"properties\": {\n" +
