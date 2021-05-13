@@ -124,17 +124,17 @@
     <constructor-arg ref="messagePublisher"/>
   </bean>
 
-  <alias name="splitKafkaPublisher" alias="messagePublisher"/>
-  <alias name="kafkaConsumer" alias="messageConsumer"/>
+  <alias name="splitRabbitPublisher" alias="messagePublisher"/>
+  <alias name="rabbitConsumer" alias="messageConsumer"/>
   <alias name="guavaDispatcher" alias="dispatcher"/>
-<!--  <alias name="decoratedRjs1Serializer" alias="serializer"/>-->
+  <alias name="decoratedRjs1Serializer" alias="serializer"/>
   <alias name="messageFamilyAwareDeserializer" alias="deserializer"/>
 
-  <alias name="hav1Serializer" alias="serializer"/>
+<!--  <alias name="hav1Serializer" alias="serializer"/> -->
 
-  <alias name="rjs1SchemaRegistryProvider" alias="rjs1SchemaProvider"/>
-  <alias name="hav1SchemaRegistryProvider" alias="hav1SchemaProvider"/>
+<!--  <alias name="rjs1SchemaRegistryProvider" alias="rjs1SchemaProvider"/> -->
+<!--  <alias name="hav1SchemaRegistryProvider" alias="hav1SchemaProvider"/> -->
 
-<!--  <alias name="rjs1SchemaFileProvider" alias="rjs1SchemaProvider"/>-->
-<!--  <alias name="hav1SchemaFileProvider" alias="hav1SchemaProvider"/>-->
+  <alias name="rjs1SchemaFileProvider" alias="rjs1SchemaProvider"/>
+  <alias name="hav1SchemaFileProvider" alias="hav1SchemaProvider"/>
 </beans>
