@@ -38,7 +38,9 @@ jobs:
           name: push-container
           command: >
                   docker tag events-poc:latest ${DOCKER_USERNAME}/events-poc:${CIRCLE_SHA1} &&
-                  docker push ${DOCKER_USERNAME}/events-poc:${CIRCLE_SHA1}
+                  docker push ${DOCKER_USERNAME}/events-poc:${CIRCLE_SHA1} &&
+                  docker tag events-poc:latest ${DOCKER_USERNAME}/events-poc:latest &&
+                  docker push ${DOCKER_USERNAME}/events-poc:latest
 
   commit-to-ops-repo:
 
