@@ -19,8 +19,8 @@ jobs:
       - run: mkdir -p workspace/code
       - checkout:
           path: ~/events-poc/workspace/code
-      - run: cd ~/fetcher/workspace/code; make test
-      - run: cd ~/fetcher/workspace/code; make build
+      - run: cd ~/events-poc/workspace/code; make test
+      - run: cd ~/events-poc/workspace/code; make build
       - persist_to_workspace:
           root: workspace
           paths:
