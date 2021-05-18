@@ -43,6 +43,20 @@ jobs:
                   docker push ${DOCKER_USERNAME}/events-poc:latest
 
   commit-to-ops-repo:
+    executor: java-executor
+    steps:
+      - run: mkdir -p workspace/deployment
+      - run: cd ~/events-poc/workspace/deployment && git clone git@github.com:rhorv/events-poc-argocd.git
+      - run:
+          name: Updating deployment repo
+          command: >
+                  sudo apt-get install -y snap && snap install --channel=v3/stable yq && cd ~/events-poc/workspace/deployment/events-poc-argocd &&
+                  /snap/yq/current/bin/yq w manifest/app/consumer.yml 'spec.template.spec.containers[name==events-poc].image' rhorv/events-poc:${CIRCLE_SHA1} > manifest/app/consumer.yml &&
+                  cat manifest/app/consumer.yml
+#                  git add . && git commit -m "Automatic commit for new container ${CIRCLE_SHA1}" && git push origin master
+
+
+
 
 
 workflows:
