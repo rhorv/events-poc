@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Updating deployment repo
           command: >
-                  sudo apt-get install -y snapd && snap install --channel=v3/stable yq && cd ~/events-poc/workspace/deployment/events-poc-argocd &&
+                  snap install --channel=v3/stable yq && cd ~/events-poc/workspace/deployment/events-poc-argocd &&
                   /snap/yq/current/bin/yq w manifest/app/consumer.yml 'spec.template.spec.containers[name==events-poc].image' rhorv/events-poc:${CIRCLE_SHA1} > manifest/app/consumer.yml &&
                   cat manifest/app/consumer.yml
 #                  git add . && git commit -m "Automatic commit for new container ${CIRCLE_SHA1}" && git push origin master
