@@ -52,7 +52,7 @@ jobs:
                   cd ~/events-poc/workspace/deployment && wget https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64 && chmod +x yq_linux_amd64 &&
                   cd ~/events-poc/workspace/deployment/events-poc-argocd &&
                   ../yq_linux_amd64 w --inplace manifest/app/consumer.yml 'spec.template.spec.containers[name==events-poc].image' rhorv/events-poc:${CIRCLE_SHA1} &&
-                  git add . && git commit -m "Automatic commit for new container ${CIRCLE_SHA1}" && git push origin master
+                  git add . && git commit -m "Automatic commit for new container ${CIRCLE_SHA1}" && git config user.email "rhorvath@starfleet.hu" && git config user.name "CircleCI WP-POC" && git push origin master
 
 
 
