@@ -51,8 +51,8 @@ jobs:
           command: >
                   cd ~/events-poc/workspace/deployment && wget https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64 && chmod +x yq_linux_amd64 &&
                   cd ~/events-poc/workspace/deployment/events-poc-argocd &&
-                  cat manifest/app/consumer.yml
-#                  ../yq_linux_amd64 w manifest/app/consumer.yml 'spec.template.spec.containers[name==events-poc].image' rhorv/events-poc:${CIRCLE_SHA1} > manifest/app/consumer.yml &&
+                  cat manifest/app/consumer.yml &&
+                  ../yq_linux_amd64 w manifest/app/consumer.yml 'spec.template.spec.containers[name==events-poc].image' rhorv/events-poc:${CIRCLE_SHA1} #> manifest/app/consumer.yml &&
 #                  git add . && git commit -m "Automatic commit for new container ${CIRCLE_SHA1}" && git push origin master
 
 
