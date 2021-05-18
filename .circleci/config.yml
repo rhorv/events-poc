@@ -63,20 +63,16 @@ workflows:
 
   build-from-master:
     jobs:
-#      - build:
-#          filters:
-#            branches:
-#              only:
-#                - develop
-#      - build-container:
-#          requires:
-#            - build
-      - commit-to-ops-repo:
+      - build:
           filters:
             branches:
               only:
                 - develop
-#          requires:
-#            - build-container
+      - build-container:
+          requires:
+            - build
+      - commit-to-ops-repo:
+          requires:
+            - build-container
 
 
