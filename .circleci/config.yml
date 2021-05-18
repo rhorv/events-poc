@@ -14,9 +14,6 @@ jobs:
     # Be sure to update the Docker image tag below to openjdk version of your application.
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/openjdk
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "15:10:3d:54:44:b4:2a:e1:e6:60:7e:5a:64:6a:fd:bc"
       - run: mkdir -p workspace/code
       - checkout:
           path: ~/events-poc/workspace/code
@@ -46,9 +43,7 @@ jobs:
   commit-to-ops-repo:
     executor: java-executor
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "15:10:3d:54:44:b4:2a:e1:e6:60:7e:5a:64:6a:fd:bc"
+      - run: ssh-keyscan github.com >> ~/.ssh/known_hosts
       - run: mkdir -p workspace/deployment
       - run: cd ~/events-poc/workspace/deployment && git clone git@github.com:rhorv/events-poc-argocd.git
       - run:
