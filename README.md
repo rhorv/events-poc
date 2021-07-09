@@ -73,7 +73,7 @@ This looks long and complicated, but don't worry, it is really just a few comman
 
 **Set up Rabbit MQ:**  
 4. Run ``make rabbitmq-start``   
-   This will start up the rabbitmq container. You can visit "http://localhost15672" to see the rabbitmq management ui (the default username is 'admin', and the default password is 'admin123') to verify that it's up and running. You should also be able to see the containers running in ``docker ps`` (RabbitMQ should have 1 container) 
+   This will start up the rabbitmq container. You can visit "http://localhost:15672" to see the rabbitmq management ui (the default username is 'admin', and the default password is 'admin123') to verify that it's up and running. You should also be able to see the containers running in ``docker ps`` (RabbitMQ should have 1 container) 
 5. Run ``make rabbitmq-setup``   
    This will initialize the queues and topics for rabbitmq
 
